@@ -8,18 +8,14 @@ from aiogram import types
 def authorization():
     logger.info("Get authorization keyboard")
 
-    keyboard = types.ReplyKeyboardMarkup(
+    return types.ReplyKeyboardMarkup(
         resize_keyboard=True,
         row_width=1,
-    )
-
-    keyboard.add(
+    ).add(
         types.KeyboardButton(
-            text=" Регистрация",
+            text="Регистрация",
         ),
         types.KeyboardButton(
             text="Войти",
         ),
     )
-
-    return keyboard
