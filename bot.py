@@ -1,10 +1,12 @@
 #-*- coding: utf-8 -*-
 
+from database.models import create_db
 from logzero import logger
 
 from aiogram import Bot, Dispatcher, types
 from aiogram import executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from middlewaries.update_logger import UpdateLoggerMiddleware
 
 from data import config
 
@@ -14,8 +16,14 @@ bot = Bot(token=config.BOT_TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
-handlers.setup(dp)
+
+async def on_startup(dp):
+    await create_db()
+
+    dp.middleware.setup(UpdateLoggerMiddleware())
+    handlers.setup(dp)
+
 
 if __name__ == "__main__":
     logger.info("Starting bot polling...")
-    executor.start_polling(dp)
+    executor.start_polling(dp, on_startup=on_startup, skip_updates=True)

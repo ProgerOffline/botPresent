@@ -1,1 +1,4 @@
 aiogram
+logzero
+sqlalchemy
+gino

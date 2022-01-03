@@ -14,8 +14,10 @@ def authorization():
     ).add(
         types.KeyboardButton(
             text="Регистрация",
+            request_contact=True,
         ),
         types.KeyboardButton(
             text="Войти",
+            request_contact=True,
         ),
     )
