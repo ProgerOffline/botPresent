@@ -5,19 +5,32 @@ from aiogram import types
 
 
 
-def authorization():
+def authorization(in_base):
+    """
+    Возвращает одну кнопку входа, если пользователь есть в базе
+    То текст будет "Войти", если нет в базе тогда "Регистрация"
+    agrs:
+        in_base - Наличие пользователя в базе
+    """
     logger.info("Get authorization keyboard")
 
-    return types.ReplyKeyboardMarkup(
-        resize_keyboard=True,
-        row_width=1,
-    ).add(
-        types.KeyboardButton(
-            text="Регистрация",
-            request_contact=True,
-        ),
-        types.KeyboardButton(
-            text="Войти",
-            request_contact=True,
-        ),
-    )
+    if in_base:     
+        return types.ReplyKeyboardMarkup(
+            resize_keyboard=True,
+            row_width=1,
+        ).add(
+            types.KeyboardButton(
+                text="Войти",
+                request_contact=True,
+            ),
+        )
+    else:
+        return types.ReplyKeyboardMarkup(
+            resize_keyboard=True,
+            row_width=1,
+        ).add(
+            types.KeyboardButton(
+                text="Регистрация",
+                request_contact=True,
+            ),
+        )
