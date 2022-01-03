@@ -1,12 +1,11 @@
 #-*- coding: utf-8 -*-
 
 from aiogram import types
-from database.models import DBCommands
+from database import users_api
 from logzero import logger
 from aiogram.dispatcher import filters
 from aiogram.dispatcher import FSMContext
 
-db = DBCommands()
 
 def setup(dp):
     # Пользователь отправил свой контакт
@@ -18,4 +17,4 @@ def setup(dp):
         contact.phone_number = int(message.contact.phone_number)
         contact.first_name = message.from_user.username
         
-        await db.add_new_user(contact)
+        await users_api.add_new_user(contact)
