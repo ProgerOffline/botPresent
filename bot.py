@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-from database.models import create_db
+from database import create_db
 from logzero import logger
 
 from aiogram import Bot, Dispatcher, types
@@ -12,7 +12,7 @@ from data import config
 
 import handlers
 
-bot = Bot(token=config.BOT_TOKEN)
+bot = Bot(token=config.BOT_TOKEN, parse_mode="HTML")
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
@@ -21,7 +21,7 @@ async def on_startup(dp):
     await create_db()
 
     dp.middleware.setup(UpdateLoggerMiddleware())
-    handlers.setup(dp)
+    handlers.setup(dp, bot)
 
 
 if __name__ == "__main__":

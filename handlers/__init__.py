@@ -3,11 +3,11 @@
 from . import messages
 from . import commands
 from . import states
-from . import reply_buttons
+from . import buttons
 
 
-def setup(dp) -> None:
-    states.setup(dp)
-    commands.setup(dp)
-    reply_buttons.setup(dp)
+def setup(dp, bot) -> None:
+    states.setup(dp, bot)
+    buttons.setup(dp)
+    commands.setup(dp, bot)
     messages.setup(dp)
