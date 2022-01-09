@@ -76,3 +76,12 @@ async def set_invest_amount(user_id, amount) -> None:
 
     user = await get_user(user_id)
     await user.update(invest_amount=amount).apply()
+
+
+async def get_all() -> list:
+    """
+        Возвращает список всех зарегистрированных пользователей
+    """
+
+    users = await User.query.gino.all()
+    return users
