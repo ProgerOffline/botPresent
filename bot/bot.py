@@ -11,9 +11,8 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from middlewaries.update_logger import UpdateLoggerMiddleware
 
 from data import config
-from admin import flask_app
-
 import handlers
+
 
 bot = Bot(token=config.BOT_TOKEN, parse_mode="HTML")
 storage = MemoryStorage()
@@ -29,6 +28,4 @@ async def on_startup(dp):
 
 if __name__ == "__main__":
     logger.info("Starting bot polling...")
-    loop = asyncio.lo
-    flask_app.app.run()
     executor.start_polling(dp, on_startup=on_startup, skip_updates=True)

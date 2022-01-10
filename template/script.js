@@ -42,38 +42,12 @@ function show_data(button_text) {
 function show_clients_data() {
     let url = domen + "/api/getUsers";
     let connect = new XMLHttpRequest();
-    connect.responseType = "json";
-    connect.open("GET", url);
+    connect.responseType = JSON;
+    connect.open(url, "GET");
     connect.send();
 
     connect.onload = () => {
-        result = connect.response;
-        console.log(result);
-        template = `
-            <tr class="header">
-                <td>ID</td>
-                <td>Номер телефона</td>
-                <td>Дата регистрации</td>
-                <td>Кошелек PM</td>
-                <td>Баланс</td>
-                <td>Инвестиция</td>
-            </tr>
-        `;
-
-        for(let i = 0; i < result.length; i++){
-            template += `
-                <tr class="user">
-                    <td>${result[i].id}</td>
-                    <td>${result[i].phone}</td>
-                    <td>${result[i].reg_date}</td>
-                    <td>${result[i].wallet}</td>
-                    <td>${result[i].ballance}</td>
-                    <td>${result[i].invest_amount}</td>
-                </tr>
-            `
-        }
-
-        document.getElementById("table-data").innerHTML = template;
+        console.log(connect.response);
     }
 }
 

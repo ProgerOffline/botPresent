@@ -2,6 +2,8 @@
 
 from database.models import User
 from datetime import datetime
+from sqlalchemy import inspect
+
 
 async def get_user(user_id) -> User:
     """
@@ -84,4 +86,5 @@ async def get_all() -> list:
     """
 
     users = await User.query.gino.all()
+    
     return users

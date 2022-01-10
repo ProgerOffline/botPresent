@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
 
 from logzero import logger
-from callbacks import corres
 from database.models import Support
 from database.users_api import get_user
 

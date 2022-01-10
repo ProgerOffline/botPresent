@@ -4,36 +4,36 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}"/>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<link rel="shortcut icon" type="image/x-icon" href='img/icon.jpg'/>
+    <link rel="stylesheet" href='style.css'>
     <title>Админ панель</title>
 </head>
 <body>
     <content>
         <div class="buttons unselectable">
             <div class="button" id="btn">
-                <img src="{{ url_for('static', filename='img/account.svg') }}" alt="icon" class="icon">
+                <img src='img/account.svg' alt="icon" class="icon">
                 <span>Клиенты</span>
             </div>
             <div class="button" id="btn">
-                <img src="{{ url_for('static', filename='img/money.svg') }}" alt="icon" class="icon">
+                <img src='img/money.svg' alt="icon" class="icon">
                 <span>Пополнения</span>
             </div>
             <div class="button" id="btn">
-                <img src="{{ url_for('static', filename='img/external.svg') }}" alt="icon" class="icon">
+                <img src='img/external.svg' alt="icon" class="icon">
                 <span>Вывод</span>
             </div>
             <div class="button" id="btn">
-                <img src="{{ url_for('static', filename='img/percent.svg') }}" alt="icon" class="icon">
+                <img src='img/percent.svg' alt="icon" class="icon">
                 <span>Проценты</span>
             </div>
             <div class="button" id="btn">
-                <img src="{{ url_for('static', filename='img/settings.svg') }}" alt="icon" class="icon">
+                <img src='img/settings.svg' alt="icon" class="icon">
                 <span>Настройки</span>
             </div>
         </div>
         <div class="info">
-            <table id="table-data">
+            <table>
                 <tr class="header">
                     <td>ID</td>
                     <td>Номер телефона</td>
@@ -55,6 +55,6 @@
     </content>
     </div>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src='script.js'></script>
 </body>
 </html>
