@@ -1,94 +1,171 @@
 let domen = "http://127.0.0.1:5000";
+let header = document.querySelector("header");
+let saveButton = document.getElementById("btn-save");
 
-let buttons = document.querySelectorAll("#btn");
-buttons[0].style.backgroundColor = "#295E3F";
-
-let swithedButton = buttons[0];
-
-buttons.forEach(element => {
-    element.onclick = (e) => {
-        if (e.srcElement.className == "button"){
-            button = e.srcElement;
-            button.style.backgroundColor = "#295E3F";
-            button_text = button.textContent.trim();
-    
-            swithedButton.style.backgroundColor = "#74AB8B";
-            swithedButton = button;
-    
-            show_data(button_text);
-        } 
-    }
-});
-
-function show_data(button_text) {
-    if (button_text == "Клиенты"){
-        show_clients_data();
-
-    } else if (button_text == "Пополнения"){
-        show_bills_data()
-
-    } else if (button_text == "Вывод"){
-        show_out_data();
-
-    } else if (button_text == "Проценты"){
-        show_precent_data();
-
-    } else if (button_text == "Настройки"){
-        show_settins_data();
-
-    }
+function showErrorMessage() {
+    new Toast({
+        title: 'Ошибка',
+        text: 'К сожелению данные не смогли дойти до сервера коректно, попробуйте перезагрузить страницу и повторить действия еще раз.',
+        theme: 'danger',
+        autohide: true,
+        interval: 5000,
+    });
 }
 
-function show_clients_data() {
+function showSuccessMessage() {
+    new Toast({
+        title: 'Сохранение...',
+        text: 'Данные успешно отправлены на сервер. Сервер их обработает в течении 5 минут. Спасибо за ожидание.',
+        theme: 'success',
+        autohide: true,
+        interval: 5000,
+    });
+}
+
+function getData() {
+    let table = document.getElementById("table-data");
+    let rows = table.querySelectorAll("tr.user");
+    let data = {};
+    
+    for (let i = 0; i < rows.length; i++){
+        let elements = rows[i].querySelectorAll("td");
+        let list = [];
+
+        for (let j = 0; j < elements.length; j++){
+            try {
+                let value = elements[j].querySelector("input").value;
+                list.push(value);
+
+            } catch (e) {
+                let value = elements[j].textContent;
+                list.push(value);
+            }
+        }
+
+        data[i] = list;
+    }
+
+    return data;
+}
+
+saveButton.onclick = () => {
+    let type = saveButton.getAttribute("current-table");
+    let url = domen + "/api/save/" + type;
+    let data = JSON.stringify(getData());
+
+    $.ajax({
+        type : "POST",
+        url : url,
+        data : { 'new-data' : data },
+        success : showSuccessMessage,
+        error : showErrorMessage,
+    });
+}
+    
+document.getElementById("btn-clients").onclick = () => {
     let url = domen + "/api/getUsers";
+    let template = `
+        <tr class="header">
+            <td>ID</td>
+            <td>Номер телефона</td>
+            <td>Дата регистрации</td>
+            <td>Кошелек PM</td>
+            <td>Баланс</td>
+            <td>Инвестиция</td>
+        </tr>
+    `;
+
     let connect = new XMLHttpRequest();
     connect.responseType = "json";
     connect.open("GET", url);
     connect.send();
-
     connect.onload = () => {
         result = connect.response;
-        console.log(result);
-        template = `
-            <tr class="header">
-                <td>ID</td>
-                <td>Номер телефона</td>
-                <td>Дата регистрации</td>
-                <td>Кошелек PM</td>
-                <td>Баланс</td>
-                <td>Инвестиция</td>
-            </tr>
-        `;
-
         for(let i = 0; i < result.length; i++){
             template += `
                 <tr class="user">
                     <td>${result[i].id}</td>
-                    <td>${result[i].phone}</td>
-                    <td>${result[i].reg_date}</td>
-                    <td>${result[i].wallet}</td>
-                    <td>${result[i].ballance}</td>
-                    <td>${result[i].invest_amount}</td>
+                    <td><input value='${result[i].phone}'></input></td>
+                    <td><input value='${result[i].reg_date}'></input></td>
+                    <td><input value='${result[i].wallet}'></input></td>
+                    <td><input value='${result[i].ballance}'></input></td>
+                    <td><input value='${result[i].invest_amount}'></input></td>
                 </tr>
-            `
+            `;
         }
 
+        saveButton.setAttribute("current-table", "clients");
+        document.getElementById("header").innerHTML = "Клиенты";
         document.getElementById("table-data").innerHTML = template;
     }
 }
 
-function show_bills_data() {
+document.getElementById("btn-payments").onclick = () => {
+    let url = domen + "/api/getPayments";
+    let template = `
+        <tr class="header">
+            <td>ID</td>
+            <td>Номер телефона</td>
+            <td>Дата и время</td>
+            <td>Банк</td>
+            <td>Сумма, руб</td>
+            <td>Статус</td>
+        </tr>
+    `;
 
+    let connect = new XMLHttpRequest();
+    connect.responseType = "json";
+    connect.open("GET", url);
+    connect.send();
+    connect.onload = () => {
+        result = connect.response;
+        for(let i = 0; i < result.length; i++){
+            template += `
+                <tr class="user">
+                    <td>${result[i].id}</td>
+                    <td><input value='${result[i].phone}'></input></td>
+                    <td><input value='${result[i].date}'></input></td>
+                    <td><input value='${result[i].bank}'></input></td>
+                    <td><input value='${result[i].amount}'></input></td>
+                    <td class="${result[i].status}"><input value='${result[i].status}'></input></td>
+                </tr>
+            `;
+        }
+
+        saveButton.setAttribute("current-table", "payments");
+        document.getElementById("header").innerHTML = "Пополнения";
+        document.getElementById("table-data").innerHTML = template;
+    }
 }
 
-function show_out_data() {
+document.getElementById("btn-settings").onclick = () => {
+    let url = domen + "/api/getConstants";
+    let template = `
+        <tr class="header">
+            <td>Текущий процент</td>
+            <td>Реквизиты Сбербанка</td>
+            <td>Реквизиты Тинькофф</td>
+            <td>Кошелек PM</td>
+        </tr>
+    `;
 
-}
+    let connect = new XMLHttpRequest();
+    connect.responseType = "json";
+    connect.open("GET", url);
+    connect.send();
+    connect.onload = () => {
+        result = connect.response;
+        template += `
+            <tr class="user">
+                <td><input value='${result.precent}'></input></td>
+                <td><input value='${result.cber_bank}'></input></td>
+                <td><input value='${result.tinkoff_bank}'></input></td>
+                <td><input value='${result.wallet_pm}'></input></td>
+            </tr>
+        `;
 
-function show_precent_data() {
-
-}
-
-function show_settins_data() {
-    
+        saveButton.setAttribute("current-table", "settings");
+        document.getElementById("header").innerHTML = "Настройки";
+        document.getElementById("table-data").innerHTML = template;
+    }
 }

@@ -56,3 +56,24 @@ class InvestProduct(db.Model):
     __tablename__ = "investproduct"
     id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
     precent = Column(Integer)
+
+
+class UsersPayments(db.Model):
+    __tablename__ = "userspayments"
+    id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
+    user_db_id = Column(BigInteger)
+    phone = Column(BigInteger)
+    date = Column(DateTime)
+    wallet = Column(String)
+    bank = Column(String)
+    amount = Column(BigInteger)
+    status = Column(String)
+
+
+class Settings(db.Model):
+    __tablename__ = "settings"
+    id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
+    precent = Column(Float)
+    cber_bank = Column(BigInteger)
+    tinkoff_bank = Column(BigInteger)
+    wallet_pm = Column(String)

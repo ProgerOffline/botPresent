@@ -16,6 +16,17 @@ async def get_user(user_id) -> User:
     return user
     
 
+async def get_user_db_id(user_id) -> User:
+    """
+        Возвращает пользователя из базы
+        args:
+            user_id - id пользователя из базы данных
+    """
+
+    user = await User.query.where(User.id == user_id).gino.first()
+    return user
+
+
 async def add_new_user(contact, referer=0) -> User: 
     """
         Добавляет пользователя в базу если его в ней нет
@@ -88,3 +99,19 @@ async def get_all() -> list:
     users = await User.query.gino.all()
     
     return users
+
+async def update_user(user_data : dict) -> None:
+    """
+        Обновляет все данные пользователя
+        args:
+            user_data - данные о пользователе
+    """
+
+    user = await get_user_db_id(user_data['user_id'])
+    await user.update(
+        phone=user_data['phone'],
+        reg_date=user_data['reg_date'],
+        wallet=user_data['wallet'],
+        ballance=user_data['ballance'],
+        invest_amount=user_data['invest_amount'],
+    ).apply()

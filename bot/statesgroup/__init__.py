@@ -19,3 +19,8 @@ class InvestProduct(StatesGroup):
 class Support(StatesGroup):
     quest_full = State()
     corres = State()
+
+
+class OutMoney(StatesGroup):
+    set_amount = State()
+    confirm_out = State()

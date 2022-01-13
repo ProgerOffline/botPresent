@@ -76,6 +76,7 @@ content {
 .info {
     width: 100%;
     padding: 20px;
+    overflow-y: scroll;
 }
 
 table {
@@ -92,11 +93,108 @@ td {
     width: 100%;
     border: 1px solid black;
     text-align: center;
-    padding: 5px;
+}
+
+td:focus {
+    border : none;
 }
 
 tr.header {
     padding: 0;
     margin: 0;
     background-color: gray;
+}
+
+
+/* .Pending, .pending {
+    background-color: rgb(207, 135, 0);
+} */
+
+input {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    background-color: inherit;
+    width: 100%;
+    border: none;
+}
+
+input:focus {
+    outline: 4px solid rgb(1, 150, 1);
+}
+
+.save {
+    margin-top: 430px; 
+    background-color: #5bb2ff;
+}
+
+.save:hover {
+    background-color: #2899fd;
+}
+
+.save:active {
+    background-color: #0c89f7;
+}
+
+/* CSS-переменные */
+:root {
+    --toast-border-radius: 0.25rem;
+    --toast-theme-default: #fff;
+  }
+  
+  .toast {
+    font-size: 0.875rem;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: var(--toast-border-radius);
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, 0.075);
+    display: none;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .toast_default {
+    color: #212529;
+    background-color: var(--toast-theme-default);
+  }
+  
+  .toast:not(:last-child) {
+    margin-bottom: 0.75rem;
+  }
+  
+  .toast__header {
+    position: relative;
+    padding: 0.5rem 2.25rem 0.5rem 1rem;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .toast__close {
+    content: "";
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 0.875em;
+    height: 0.875em;
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/0.875em auto no-repeat;
+    border: 0;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 0.1s ease-in-out;
+  }
+  
+  .toast__close:hover {
+    opacity: 1;
+  }
+  
+  .toast__body {
+    padding: 1rem;
+  }
+  
+  .toast_message .toast__body {
+    padding-right: 2.25rem;
+  }
+
+#btn-out {
+    background-color: rgb(218, 61, 61);
 }

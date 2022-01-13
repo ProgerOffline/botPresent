@@ -2,7 +2,7 @@
 
 from quart import json
 from loader import app
-from database import users_api
+from database import users_api, payments_api
 
 
 @app.route("/api")
@@ -10,10 +10,10 @@ async def api_index():
     pass
 
 
-@app.route("/api/getUsers")
+@app.route("/api/getUsers", methods=['GET'])
 async def api_get_users():
     users = await users_api.get_all()
-    users_list = []
+    result_list = []
 
     for user in users:
         data = {
@@ -27,12 +27,12 @@ async def api_get_users():
             "wallet" : user.wallet,
             "referer" : user.referer,
             "ref_level" : user.ref_level,
-            "reg_date" : user.reg_date,
+            "reg_date" : user.reg_date.strftime("%d.%m.%y"),
         }
-        users_list.append(data)
+        result_list.append(data)
 
     response = app.response_class(
-        response=json.dumps(users_list),
+        response=json.dumps(result_list),
         status=200,
         mimetype='application/json',
     ) 

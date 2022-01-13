@@ -1,14 +1,12 @@
 #-*- coding: utf-8 -*-
 
-from re import M
 import keyboards
 
 from data.config import SUPPORT_CHANNEL_ID 
 from aiogram import types
-from keyboards import reply
-from statesgroup import InvestProduct, Payment, Support, Wallet
+from statesgroup import InvestProduct, Payment, Support, Wallet, OutMoney
 from aiogram.dispatcher import FSMContext
-from database import users_api, support_api
+from database import users_api, support_api, payments_api, settings_api
 
 
 def setup(dp, bot):
@@ -30,16 +28,22 @@ def setup(dp, bot):
             )   
             return
 
-        await state.update_data(amount=amount)
-
+        constants = await settings_api.get_constants()
+        data = await state.get_data()
+        site = "<a href='https://sber.ru/bank/'>Сбербанк</a>" \
+            if data['bank'] == "Сбербанк" \
+            else  "<a href='https://www.tinkoff.ru/'>Тинькофф</a>"
+        card = constants.cber_bank \
+            if "sber" in site \
+            else constants.tinkoff_bank
+            
         msg = "📌 <b>ПОРЯДОК ДЕЙСТВИЙ ДЛЯ СОВЕРШЕНИЯ ОБМЕНА:</b>\n\n" + \
-            "1️⃣ Перейдите на сайт <a href=''>Сбербанк онлайн</a>" + \
-                " / <a href=''>Тинькофф онлайн</a>" + \
+            f"1️⃣ Перейдите на сайт {site}" + \
                 " и войдите в кабинет пользователя.\n" + \
-            "2️⃣ Совершите платеж на сумму <b>500.00 RUB</b>, " + \
+            f"2️⃣ Совершите платеж на сумму <b>{amount} RUB</b>, " + \
                 "с точностью до 1 копейки.\n" + \
-            "3️⃣ Номер карты для перевода  - 4800123412341234.\n" + \
-            "4️⃣ Ф.И.О. получателя -  Б ЕВГЕНИЙ ВЛАДИМИРОВИЧ.\n" + \
+            f"3️⃣ Номер карты для перевода  - <code>{card}</code>.\n" + \
+            "4️⃣ Ф.И.О. получателя -  Б. ЕВГЕНИЙ ВЛАДИМИРОВИЧ.\n" + \
             "5️⃣ Комментарий к  переводу -  Мой телефон +79112223333.\n\n" + \
             "❗️ Правильно указывайте «комментарии к платежу / сообщение " + \
                 "получателю», а именно: <b>«Мой телефон +79112223333»</b>. " + \
@@ -49,15 +53,24 @@ def setup(dp, bot):
         await message.answer(
             text=msg,
             reply_markup=keyboards.reply.check_bill(),
+            disable_web_page_preview=True,
         )
         
+        payment = await payments_api.add_payment(
+            user_id=message.from_user.id,
+            bank=data['bank'],
+            amount=amount,
+        )
+
+        await state.update_data(amount=amount)
+        await state.update_data(payment_id=payment.id)
         await Payment.payment_check.set()
     
     @dp.message_handler(state=Wallet.set_wallet)
     async def set_wallet(message: types.Message, state: FSMContext):
         if message.text[0] != "U" and message.text[0] != "u":
             msg = "⚠️ Ошибка: Недопустимый формат кошелька." + \
-                    "Проверьте правильность написания" 
+                    "Проверьте правильность написания",
             await message.answer(
                 text=msg,
             )
@@ -193,3 +206,43 @@ def setup(dp, bot):
                 chat_id=corres.user_id,
                 text=message.text,
             )
+        
+    @dp.message_handler(state=OutMoney.set_amount)
+    async def set_amount(message: types.Message, state: FSMContext):
+        user = await users_api.get_user(message.from_user.id)
+        if user.wallet == "Не указано":
+            await message.answer(
+                text="⚠️ Ошибка: Привяжите кошелек Perfect Money",
+            )
+            return
+
+        try:
+            amount = int(message.text)
+        except ValueError:
+            await message.answer(
+                text="⚠️ Ошибка: сумма должна состоять только из цифр",
+            )
+            return
+        
+        if amount < 500:
+            await message.answer(
+                text="⚠️ Ошибка: Минимальная сумма вывода 500 руб."
+            )
+            return
+        
+        if user.ballance < amount:
+            await message.answer(
+                text="⚠️ Ошибка: Суммы на балансе не достаточно"
+            )
+            return
+        
+        await state.update_data(amount=amount)
+        await OutMoney.confirm_out.set()
+        await message.answer(
+            text="❗️ Проверьте данные ❗️\n" + \
+                f"Вывод на кошелек PM: {user.wallet}.\n" + \
+                f"Сумма вывода: {amount}.\n\n" + \
+                "Внимательно проверьте данные, " + \
+                "и если все верно подтверждайте вывод.",
+            reply_markup=keyboards.reply.confirm_out(),
+        )

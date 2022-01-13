@@ -6,55 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='toast.css') }}">
     <title>Админ панель</title>
 </head>
 <body>
     <content>
         <div class="buttons unselectable">
-            <div class="button" id="btn">
+            <div class="button" id="btn-clients">
                 <img src="{{ url_for('static', filename='img/account.svg') }}" alt="icon" class="icon">
                 <span>Клиенты</span>
             </div>
-            <div class="button" id="btn">
+            <div class="button" id="btn-payments">
                 <img src="{{ url_for('static', filename='img/money.svg') }}" alt="icon" class="icon">
                 <span>Пополнения</span>
             </div>
-            <div class="button" id="btn">
+            <div class="button" id="btn-out">
                 <img src="{{ url_for('static', filename='img/external.svg') }}" alt="icon" class="icon">
                 <span>Вывод</span>
             </div>
-            <div class="button" id="btn">
-                <img src="{{ url_for('static', filename='img/percent.svg') }}" alt="icon" class="icon">
-                <span>Проценты</span>
-            </div>
-            <div class="button" id="btn">
+            <div class="button" id="btn-settings">
                 <img src="{{ url_for('static', filename='img/settings.svg') }}" alt="icon" class="icon">
                 <span>Настройки</span>
             </div>
+            <div class="button save" id='btn-save' current-table=''>
+                <img src="{{ url_for('static', filename='img/save.svg') }}" alt="icon" class="icon">
+                <span>Сохранить</span>                
+            </div>
         </div>
         <div class="info">
+            <h1 id="header"></h1>
             <table id="table-data">
-                <tr class="header">
-                    <td>ID</td>
-                    <td>Номер телефона</td>
-                    <td>Дата регистрации</td>
-                    <td>Кошелек PM</td>
-                    <td>Баланс</td>
-                    <td>Инвестиция</td>
-                </tr>
-                <tr class="user">
-                    <td>ID</td>
-                    <td>Номер телефона</td>
-                    <td>Дата регистрации</td>
-                    <td>Кошелек PM</td>
-                    <td>Баланс</td>
-                    <td>Инвестиция</td>
-                </tr>
             </table>
         </div>
     </content>
     </div>
 
+<script src="{{ url_for('static', filename='toast.min.js') }}"></script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src="{{ url_for('static', filename='jquery-3.6.0.js') }}"></script>
 </body>
 </html>

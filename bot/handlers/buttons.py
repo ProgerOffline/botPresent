@@ -1,10 +1,10 @@
 #-*- coding: utf-8 -*-
 
 from aiogram import types
-from database import users_api
+from database import users_api, payments_api
 from aiogram.dispatcher import filters
 from aiogram.dispatcher import FSMContext
-from statesgroup import Payment, Support, Wallet, InvestProduct
+from statesgroup import Payment, Support, Wallet, InvestProduct, OutMoney
 
 import keyboards
 
@@ -34,8 +34,10 @@ def setup(dp):
 
     @dp.message_handler(filters.Text(contains="Сбербанк"))
     @dp.message_handler(filters.Text(contains="Тинькофф"))
-    async def payment_type(message: types.Message):
+    async def payment_type(message: types.Message, state: FSMContext):
         await Payment.payment_amount.set()
+        
+        await state.update_data(bank=message.text)
         await message.answer(
             text="💵 Введите сумму в RUB",
         )
@@ -45,19 +47,25 @@ def setup(dp):
     async def check_bill(message: types.Message, state: FSMContext):
         async with state.proxy() as data:
             amount = data['amount']
+            payment_id = data['payment_id']
 
-        user = await users_api.get_user(message.from_user.id)
-        amount = user.ballance + amount
-        await users_api.set_ballance(
-            user_id=message.from_user.id,
-            amount=amount,
-        )
+        payment = await payments_api.get_payment(payment_id)
+        await payments_api.set_status(payment_id, "Pending")
 
         await message.answer(
-            text=f"⏳ Ожидайте поступление денежных средств на Ваш " + \
+            text="⏳ Ожидайте поступление денежных средств на Ваш " + \
                 "баланс в течение 24 часов.",
         )
         await state.finish()
+    
+    @dp.message_handler(
+        filters.Text(contains="Назад"), state=Payment.payment_check)
+    async def back_to_menu(message: types.Message, state: FSMContext):
+        await state.finish()
+        await message.answer(
+            text="🗃 Выберите раздел.",
+            reply_markup=keyboards.reply.main_menu(),
+        )
 
     @dp.message_handler(filters.Text(contains="Реферальная ссылка"))
     async def ref_link(message: types.Message):
@@ -89,7 +97,6 @@ def setup(dp):
 
     @dp.message_handler(filters.Text(contains="Кошелек для вывода"))
     async def wallet_out(message: types.Message):
-        user = await users_api.get_user(message.from_user.id)
         msg = "💲  Введите ваш долларовый кошелек платежной системы " + \
             "Perfect Money.\nПример кошелька: U1234567\n" + \
             "📌 Как зарегистрировать кошелек Perfect Money" + \
@@ -139,9 +146,8 @@ def setup(dp):
         )
 
     @dp.message_handler(
-        filters.Text(contains="Назад"), 
-        state=InvestProduct.confirm_purchase)
-    async def back_to_menu(message: types.Message, state: FSMContext):
+        filters.Text(contains="Назад"), state=InvestProduct.confirm_purchase)
+    async def back_outside_check_bill(message: types.Message, state: FSMContext):
         await state.finish()
         await message.answer(
             text="🗃 Выберите раздел.",
@@ -180,7 +186,6 @@ def setup(dp):
         await message.answer(
             text="Пожалуйста, введите свой вопрос",
         )
-        
     
     @dp.message_handler(filters.Text(contains="Профиль"))
     async def profile(message: types.Message):
@@ -204,3 +209,23 @@ def setup(dp):
             text=msg,
         )
     
+    @dp.message_handler(filters.Text(contains="Вывод"))
+    async def out_money(message: types.Message):
+        await OutMoney.set_amount.set()
+        await message.answer(
+            text="💵 Введите сумму в RUB",
+        )
+    
+    @dp.message_handler(
+        filters.Text(contains="Подтвердить вывод"), state=OutMoney.confirm_out)
+    async def confirm_out(message: types.Message, state: FSMContext):
+        user = await users_api.get_user(message.from_user.id)
+        async with state.proxy() as data:
+            amount = data['amount']
+        
+        # TODO: Нужно тестировать с PM API нужны кошельки
+
+        await message.answer(
+            text="⏳ Ожидайте поступление денежных средств на " + \
+                "Ваш кошелек Perfectmoney. Это может занять до 24 часов."
+        )

@@ -1,6 +1,5 @@
 #-*- coding: utf-8 -*-
 
-from logzero import logger
 from aiogram import types
 
 
@@ -11,8 +10,6 @@ def authorization(in_base):
     agrs:
         in_base - Наличие пользователя в базе
     """
-    logger.info("Get authorization keyboard")
-
     if in_base:     
         return types.ReplyKeyboardMarkup(
             resize_keyboard=True,
@@ -36,8 +33,6 @@ def authorization(in_base):
     
 
 def main_menu():
-    logger.info("Get main_menu keyboard")
-
     return types.ReplyKeyboardMarkup(
         resize_keyboard=True,
         row_width=1,
@@ -62,8 +57,6 @@ def main_menu():
 
 
 def fill_ballance():
-    logger.info("Get fill_balance keyboard")
-
     return types.ReplyKeyboardMarkup(
         resize_keyboard=True,
         row_width=1,
@@ -76,8 +69,6 @@ def fill_ballance():
 
 
 def check_bill():
-    logger.info("Get check_bill keyboard")
-
     return types.ReplyKeyboardMarkup(
         resize_keyboard=True,
         row_width=1,
@@ -88,8 +79,6 @@ def check_bill():
 
 
 def back_to_menu():
-    logger.info("Get back_to_menu keyboard")
-
     return types.ReplyKeyboardMarkup(
         resize_keyboard=True,
         row_width=1,
@@ -99,8 +88,6 @@ def back_to_menu():
 
 
 def confirm_purchase():
-    logger.info("Get confirm_purchase keyboard")
-
     return types.ReplyKeyboardMarkup(
         resize_keyboard=True,
         row_width=1,
@@ -111,8 +98,6 @@ def confirm_purchase():
 
 
 def quest_type():
-    logger.info("Get quest_type keyboard")
-
     return types.ReplyKeyboardMarkup(
         resize_keyboard=True,
         row_width=1,
@@ -128,11 +113,19 @@ def quest_type():
 
 
 def exit_corres():
-    logger.info("Get exit_corres keyboard")
-
     return types.ReplyKeyboardMarkup(
         resize_keyboard=True,
         row_width=1,
     ).add(
         types.KeyboardButton(text="Завершить чат"),
+    )
+
+
+def confirm_out():
+    return types.ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        row_width=1,
+    ).add(
+        types.KeyboardButton(text="Подтвердить вывод"),
+        types.KeyboardButton(text="Назад"),
     )
