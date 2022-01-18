@@ -7,6 +7,7 @@ from aiogram import types
 from statesgroup import InvestProduct, Payment, Support, Wallet, OutMoney
 from aiogram.dispatcher import FSMContext
 from database import users_api, support_api, payments_api, settings_api
+from aiogram.utils.exceptions import ChatNotFound
 
 
 def setup(dp, bot):
@@ -43,7 +44,7 @@ def setup(dp, bot):
             f"2️⃣ Совершите платеж на сумму <b>{amount} RUB</b>, " + \
                 "с точностью до 1 копейки.\n" + \
             f"3️⃣ Номер карты для перевода  - <code>{card}</code>.\n" + \
-            "4️⃣ Ф.И.О. получателя -  Б. ЕВГЕНИЙ ВЛАДИМИРОВИЧ.\n" + \
+            f"4️⃣ Ф.И.О. получателя -  {constants.fio}\n" + \
             "5️⃣ Комментарий к  переводу -  Мой телефон +79112223333.\n\n" + \
             "❗️ Правильно указывайте «комментарии к платежу / сообщение " + \
                 "получателю», а именно: <b>«Мой телефон +79112223333»</b>. " + \
@@ -108,7 +109,7 @@ def setup(dp, bot):
         
         if amount < 1000:
             await message.answer(
-                text="⚠️ Ошибка: Минимальная сумма инвестиции кратное от $1000",
+                text="⚠️ Ошибка: Минимальная сумма инвестиции от 1000 RUB",
             )
             return
         
@@ -148,7 +149,7 @@ def setup(dp, bot):
                 "Оператор уже подключается к вам."
         await message.answer(
             text=msg,
-            reply_markup=keyboards.reply.back_to_menu(),
+            reply_markup=keyboards.reply.exit_corres(),
         )
 
         msg = f"💬 Новый вопрос от <code>{message.from_user.username}</code>\n" + \
@@ -168,18 +169,21 @@ def setup(dp, bot):
             corres_id = data['corres_id']
 
         corres = await support_api.get_corres(corres_id)
-        
+
         if message.text == "Завершить чат":
             if message.from_user.id == corres.user_id:
                 companion_id = corres.support_id
             else:
                 companion_id = corres.user_id
 
-            await bot.send_message(
-                chat_id=companion_id,
-                text=f"<code>{message.from_user.username}</code> завершил чат",
-                reply_markup=keyboards.reply.main_menu(),
-            )
+            try:
+                await bot.send_message(
+                    chat_id=companion_id,
+                    text=f"<code>{message.from_user.username}</code> завершил чат",
+                    reply_markup=keyboards.reply.main_menu(),
+                )
+            except ChatNotFound:
+                pass
 
             await bot.send_message(
                 chat_id=message.from_user.id,
@@ -230,14 +234,14 @@ def setup(dp, bot):
         
         if amount < 10:
             await message.answer(
-                text="⚠️ Ошибка: Минимальная сумма вывода 500 руб."
+                text="⚠️ Ошибка: Минимальная сумма вывода 500 RUB."
             )
             await state.finish()
             return
         
         if user.ballance < amount:
             await message.answer(
-                text="⚠️ Ошибка: Суммы на балансе не достаточно"
+                text="⚠️ Ошибка: На вашем балансе недостаточно средств."
             )
             await state.finish()
             return

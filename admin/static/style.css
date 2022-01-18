@@ -137,6 +137,15 @@ input:focus {
     background-color: #0c89f7;
 }
 
+select {
+    border: none;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background: none;
+}
+
 /* CSS-переменные */
 :root {
     --toast-border-radius: 0.25rem;

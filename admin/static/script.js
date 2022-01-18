@@ -1,4 +1,4 @@
-let domen = "http://82.146.63.233:5000";
+let domen = "http://127.0.0.1:5000";
 let header = document.querySelector("header");
 let saveButton = document.getElementById("btn-save");
 
@@ -37,8 +37,13 @@ function getData() {
                 list.push(value);
 
             } catch (e) {
-                let value = elements[j].textContent;
-                list.push(value);
+                try {
+                    let value = elements[j]. querySelector("select").selectedOptions[0].label;
+                    list.push(value);
+                } catch (e) {
+                    let value = elements[j].textContent;
+                    list.push(value);
+                }
             }
         }
 
@@ -127,7 +132,13 @@ document.getElementById("btn-payments").onclick = () => {
                     <td><input value='${result[i].date}'></input></td>
                     <td><input value='${result[i].bank}'></input></td>
                     <td><input value='${result[i].amount}'></input></td>
-                    <td class="${result[i].status}"><input value='${result[i].status}'></input></td>
+                    <td>
+                        <select>
+                            <option>${result[i].status}</option>
+                            <option>Начислить</option>
+                            <option>Отменить</option>
+                        </select>
+                    </td>
                 </tr>
             `;
         }
@@ -145,6 +156,7 @@ document.getElementById("btn-settings").onclick = () => {
             <td>Текущий процент</td>
             <td>Реквизиты Сбербанка</td>
             <td>Реквизиты Тинькофф</td>
+            <td>ФИО</td>
             <td>Кошелек PM</td>
             <td>PM Логин</td>
             <td>PM Пароль</td>
@@ -162,6 +174,7 @@ document.getElementById("btn-settings").onclick = () => {
                 <td><input value='${result.precent}'></input></td>
                 <td><input value='${result.cber_bank}'></input></td>
                 <td><input value='${result.tinkoff_bank}'></input></td>
+                <td><input value='${result.fio}'></input></td>
                 <td><input value='${result.wallet_pm}'></input></td>
                 <td><input value='${result.pm_account}'></input></td>
                 <td><input value='${result.pm_passwd}'></input></td>

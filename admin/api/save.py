@@ -66,13 +66,16 @@ async def save_settings():
     data = eval(data['new-data'])['0']
 
     constants = {
-        "precent" : int(data[0]),
+        "precent" : float(data[0]),
         "cber_bank" : int(data[1]),
         "tinkoff_bank" : int(data[2]),
-        "wallet_pm" : data[3],
-        "pm_account" : int(data[4]),
-        "pm_passwd" : data[5],
+        "fio" : data[3],
+        "wallet_pm" : data[4],
+        "pm_account" : int(data[5]),
+        "pm_passwd" : data[6],
     }
+
+    await settings_api.check_precent(constants)
     await settings_api.update_constants(constants)
     
     response = app.response_class(

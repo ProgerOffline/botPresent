@@ -76,6 +76,7 @@ class Settings(db.Model):
     precent = Column(Float)
     cber_bank = Column(BigInteger)
     tinkoff_bank = Column(BigInteger)
+    fio = Column(String)
     wallet_pm = Column(String)
     pm_account = Column(BigInteger)
     pm_passwd = Column(String)

@@ -102,7 +102,7 @@ async def check_payment(payment_id : int) -> None:
     """
     payment = await get_payment(payment_id)
 
-    if payment.status in  ("Начислено", "начислено") :
+    if payment.status in  ("Начислить", "начислить") :
         user = await users_api.get_user_db_id(payment.user_db_id)
 
         await users_api.set_ballance(
@@ -111,11 +111,11 @@ async def check_payment(payment_id : int) -> None:
         )
         await widgets.send_message(
             user_id=user.user_id,
-            text=f"ℹ️ На ваш баланс успешно зачислено {payment.amount} руб.",
+            text=f"ℹ️ На ваш баланс успешно зачислено {payment.amount} RUB.",
         )
         await set_status(payment_id, "Выполнен")
     
-    elif payment.status in ("Отмена", "отмена"):
+    elif payment.status in ("Отменить", "отменить"):
         user = await users_api.get_user_db_id(payment.user_db_id)
 
         await widgets.send_message(

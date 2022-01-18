@@ -57,6 +57,7 @@ def setup(dp):
         await message.answer(
             text="⏳ Ожидайте поступление денежных средств на Ваш " + \
                 "баланс в течение 24 часов.",
+            reply_markup=keyboards.reply.main_menu(),
         )
         await state.finish()
     
@@ -100,7 +101,7 @@ def setup(dp):
 
     @dp.message_handler(filters.Text(contains="Кошелек для вывода"))
     async def wallet_out(message: types.Message):
-        msg = "💲  Введите ваш долларовый кошелек платежной системы " + \
+        msg = "💲 Введите ваш долларовый кошелек платежной системы " + \
             "Perfect Money.\nПример кошелька: U1234567\n" + \
             "📌 Как зарегистрировать кошелек Perfect Money" + \
             " можете прочитать в данной статье htts://"
@@ -112,7 +113,7 @@ def setup(dp):
 
     @dp.message_handler(filters.Text(contains="Инвестиционный продукт"))
     async def invest_product(message: types.Message):
-        msg = "ЕЖЕДНЕВНАЯ ДОХОДНОСТЬ 5-10%\n\n" + \
+        msg = "ЕЖЕДНЕВНАЯ ДОХОДНОСТЬ 5-10%\n" + \
             "▪️ Депозит от 1000 RUB.\n" + \
             "▪️Ввод Сбербанк / Тинькофф  и вывод Perfect Money.\n" + \
             "▪️Вывод дивидендов каждый день.\n" + \
@@ -145,6 +146,7 @@ def setup(dp):
         await state.finish()
         await message.answer(
             text=msg,
+            reply_markup=keyboards.reply.main_menu(),
         )
 
     @dp.message_handler(
@@ -158,9 +160,11 @@ def setup(dp):
     
     @dp.message_handler(filters.Text(contains="Выход"))
     async def logout(message: types.Message):
+        in_base = bool(await users_api.get_user(message.from_user.id))
+
         await message.answer(
             text="🙏🏻 Спасибо, что Вы с нами! Ждем Вас снова.",
-            reply_markup=types.ReplyKeyboardRemove(),
+            reply_markup=keyboards.reply.authorization(in_base),
         )
     
     @dp.message_handler(filters.Text(contains="Презентация"))

@@ -12,6 +12,7 @@ async def get_constants():
         "precent" : constants.precent,
         "cber_bank" : constants.cber_bank,
         "tinkoff_bank" : constants.tinkoff_bank,
+        "fio" : constants.fio,
         "wallet_pm" : constants.wallet_pm,
         "pm_account" : constants.pm_account,
         "pm_passwd" : constants.pm_passwd,

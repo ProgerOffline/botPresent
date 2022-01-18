@@ -6,8 +6,8 @@ from database.models import db, ReferalProgramLevels, InvestProduct, Settings
 
 async def create_db():
     await db.set_bind(f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/gino")
-    # await db.gino.drop_all()
-    # await db.gino.create_all()
+    await db.gino.drop_all()
+    await db.gino.create_all()
 
     await fill_constants_data()
     await fill_ref_program_data()
@@ -42,6 +42,7 @@ async def fill_constants_data():
     new_constant.precent = 5.0
     new_constant.cber_bank = 0
     new_constant.tinkoff_bank = 0
+    new_constant.fio = " "
     new_constant.wallet_pm = ""
     new_constant.pm_account = 0
     new_constant.pm_passwd = ""
