@@ -124,7 +124,8 @@ input:focus {
 }
 
 .save {
-    margin-top: 430px; 
+    top: 100%;
+    position: sticky;
     background-color: #5bb2ff;
 }
 
@@ -194,7 +195,3 @@ input:focus {
   .toast_message .toast__body {
     padding-right: 2.25rem;
   }
-
-#btn-out {
-    background-color: rgb(218, 61, 61);
-}

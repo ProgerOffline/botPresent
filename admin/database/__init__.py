@@ -7,6 +7,7 @@ from . import models
 from . import referers_api
 from . import support_api
 from . import users_api
+from . import outs_api
 
 from loader import app
 

@@ -69,8 +69,9 @@ def setup(dp, bot):
     @dp.message_handler(state=Wallet.set_wallet)
     async def set_wallet(message: types.Message, state: FSMContext):
         if message.text[0] != "U" and message.text[0] != "u":
-            msg = "⚠️ Ошибка: Недопустимый формат кошелька." + \
-                    "Проверьте правильность написания",
+            msg = "⚠️ Ошибка: Недопустимый формат кошелька. " + \
+                    "Проверьте правильность написания"
+
             await message.answer(
                 text=msg,
             )
@@ -210,10 +211,12 @@ def setup(dp, bot):
     @dp.message_handler(state=OutMoney.set_amount)
     async def set_amount(message: types.Message, state: FSMContext):
         user = await users_api.get_user(message.from_user.id)
-        if user.wallet == "Не указано":
+        
+        if ("U" not in user.wallet) or ("U" not in user.wallet):
             await message.answer(
                 text="⚠️ Ошибка: Привяжите кошелек Perfect Money",
             )
+            await state.finish()
             return
 
         try:
@@ -222,18 +225,21 @@ def setup(dp, bot):
             await message.answer(
                 text="⚠️ Ошибка: сумма должна состоять только из цифр",
             )
+            await state.finish()
             return
         
-        if amount < 500:
+        if amount < 10:
             await message.answer(
                 text="⚠️ Ошибка: Минимальная сумма вывода 500 руб."
             )
+            await state.finish()
             return
         
         if user.ballance < amount:
             await message.answer(
                 text="⚠️ Ошибка: Суммы на балансе не достаточно"
             )
+            await state.finish()
             return
         
         await state.update_data(amount=amount)

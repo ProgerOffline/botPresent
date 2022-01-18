@@ -78,3 +78,16 @@ class Settings(db.Model):
     cber_bank = Column(BigInteger)
     tinkoff_bank = Column(BigInteger)
     wallet_pm = Column(String)
+    pm_account = Column(BigInteger)
+    pm_passwd = Column(String)
+
+
+class OutsRecords(db.Model):
+    __tablename__ = "outsrecords"
+    id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
+    user_db_id = Column(BigInteger)
+    phone = Column(BigInteger)
+    date = Column(DateTime)
+    wallet = Column(String)
+    amount = Column(Float)
+    error = Column(String)

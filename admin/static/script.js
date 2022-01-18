@@ -146,6 +146,8 @@ document.getElementById("btn-settings").onclick = () => {
             <td>Реквизиты Сбербанка</td>
             <td>Реквизиты Тинькофф</td>
             <td>Кошелек PM</td>
+            <td>PM Логин</td>
+            <td>PM Пароль</td>
         </tr>
     `;
 
@@ -161,11 +163,52 @@ document.getElementById("btn-settings").onclick = () => {
                 <td><input value='${result.cber_bank}'></input></td>
                 <td><input value='${result.tinkoff_bank}'></input></td>
                 <td><input value='${result.wallet_pm}'></input></td>
+                <td><input value='${result.pm_account}'></input></td>
+                <td><input value='${result.pm_passwd}'></input></td>
             </tr>
         `;
 
         saveButton.setAttribute("current-table", "settings");
         document.getElementById("header").innerHTML = "Настройки";
+        document.getElementById("table-data").innerHTML = template;
+    }
+}
+
+document.getElementById("btn-out").onclick = () => {
+    let url = domen + "/api/getOuts";
+    let template = `
+        <tr class="header">
+            <td>ID</td>
+            <td>Номер телефона</td>
+            <td>Дата и время</td>
+            <td>Кошелек PM</td>
+            <td>Сумма $</td>
+            <td>Ошибка</td>
+        </tr>
+    `;
+
+    let connect = new XMLHttpRequest();
+    connect.responseType = "json";
+    connect.open("GET", url);
+    connect.send();
+    connect.onload = () => { 
+        result = connect.response;
+        console.log(result);
+        for(let i = 0; i < result.length; i++){
+            template += `
+                <tr class="user">
+                    <td>${result[i].id}</td>
+                    <td>${result[i].phone}</td>
+                    <td>${result[i].date}</td>
+                    <td>${result[i].wallet}</td>
+                    <td>${result[i].amount}</td>
+                    <td >${result[i].error}</td>
+                </tr>
+            `;
+        }
+
+        saveButton.setAttribute("current-table", "");
+        document.getElementById("header").innerHTML = "Выводы";
         document.getElementById("table-data").innerHTML = template;
     }
 }

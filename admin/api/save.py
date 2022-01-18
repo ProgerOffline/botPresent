@@ -64,13 +64,14 @@ async def save_payments():
 async def save_settings():
     data = await request.form
     data = eval(data['new-data'])['0']
-    print(data)
 
     constants = {
         "precent" : int(data[0]),
         "cber_bank" : int(data[1]),
         "tinkoff_bank" : int(data[2]),
         "wallet_pm" : data[3],
+        "pm_account" : int(data[4]),
+        "pm_passwd" : data[5],
     }
     await settings_api.update_constants(constants)
     

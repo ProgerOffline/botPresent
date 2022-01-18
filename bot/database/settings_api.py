@@ -23,4 +23,6 @@ async def update_constants(constants_data: dict) -> None:
         cber_bank=constants_data['cber_bank'],
         tinkoff_bank=constants_data['tinkoff_bank'],
         wallet_pm=constants_data['wallet_pm'],
+        pm_account=constants_data['pm_account'],
+        pm_passwd=constants_data['pm_passwd'],
     ).apply()

@@ -12,6 +12,17 @@ async def get_user(user_id) -> User:
 
     user = await User.query.where(User.user_id == user_id).gino.first()
     return user
+
+
+async def get_user_db_id(user_id) -> User:
+    """
+        Возвращает пользователя из базы
+        args:
+            user_id - id пользователя из базы данных
+    """
+
+    user = await User.query.where(User.id == user_id).gino.first()
+    return user
     
 
 async def add_new_user(contact, referer=0) -> User: 

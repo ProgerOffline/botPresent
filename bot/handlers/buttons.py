@@ -1,10 +1,12 @@
 #-*- coding: utf-8 -*-
 
 from aiogram import types
-from database import users_api, payments_api
+from database import users_api, payments_api, settings_api, outs_api
 from aiogram.dispatcher import filters
 from aiogram.dispatcher import FSMContext
 from statesgroup import Payment, Support, Wallet, InvestProduct, OutMoney
+from utils.perfectmoney import PerfectMoney
+from pycbrf import ExchangeRates
 
 import keyboards
 
@@ -70,8 +72,8 @@ def setup(dp):
     @dp.message_handler(filters.Text(contains="Реферальная ссылка"))
     async def ref_link(message: types.Message):
         user = await users_api.get_user(message.from_user.id)
-
-        if user.buyed:
+        print(user.buyed)
+        if user.invest_amount > 0:
             msg = "🔗 Скопируйте и отправьте ссылку новому партнеру: " + \
                 f"https://t.me/tg4bot_bot?start=referer_{user.id}"
         else:
@@ -80,6 +82,7 @@ def setup(dp):
 
         await message.answer(
             text=msg,
+            reply_markup=keyboards.reply.main_menu(),
         )
 
     @dp.message_handler(filters.Text(contains="Мои инвестиции"))
@@ -132,7 +135,6 @@ def setup(dp):
         user = await users_api.get_user(message.from_user.id)
 
         ballance = user.ballance - amount
-        print(ballance)
         await users_api.set_ballance(message.from_user.id, ballance)
 
         invest_amount = user.invest_amount + amount
@@ -223,9 +225,24 @@ def setup(dp):
         async with state.proxy() as data:
             amount = data['amount']
         
-        # TODO: Нужно тестировать с PM API нужны кошельки
+        usd_rate = round(ExchangeRates()['USD'].value)
+        pay_amount = round(amount / usd_rate, 2)
+        
+        constants = await settings_api.get_constants()
+        pm = PerfectMoney(constants.pm_account, constants.pm_passwd)
+        send = pm.spend(constants.wallet_pm, user.wallet, pay_amount)
+
+        if not send:
+            text = "⚠️ Ошибка, попробуйте сделать вывод немного позже."
+        else:
+            text = "⏳ Ожидайте поступление денежных средств на " + \
+                "Ваш кошелек Perfectmoney. Это может занять до 24 часов."
+            
+            await users_api.set_ballance(user.user_id, user.ballance - amount)
 
         await message.answer(
-            text="⏳ Ожидайте поступление денежных средств на " + \
-                "Ваш кошелек Perfectmoney. Это может занять до 24 часов."
+            text=text,
+            reply_markup=keyboards.reply.main_menu(),
         )
+        await outs_api.add_record(user.id, pay_amount, pm.error)
+        await state.finish()

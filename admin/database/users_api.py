@@ -100,6 +100,7 @@ async def get_all() -> list:
     
     return users
 
+
 async def update_user(user_data : dict) -> None:
     """
         Обновляет все данные пользователя
