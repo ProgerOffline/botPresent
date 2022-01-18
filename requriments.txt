@@ -1,0 +1,10 @@
+aiogram
+logzero
+sqlalchemy
+gino
+environs
+xmltodict
+pycbrf
+apscheduler
+postgres
+quart

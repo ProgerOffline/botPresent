@@ -1,4 +1,0 @@
-aiogram
-logzero
-sqlalchemy
-gino
