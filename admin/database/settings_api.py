@@ -28,6 +28,7 @@ async def update_constants(constants_data: dict) -> None:
         wallet_pm=constants_data['wallet_pm'],
         pm_account=constants_data['pm_account'],
         pm_passwd=constants_data['pm_passwd'],
+        support_chat_id=constants_data['support_chat_id'],
     ).apply()
 
 

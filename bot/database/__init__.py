@@ -47,4 +47,5 @@ async def fill_constants_data():
     new_constant.wallet_pm = ""
     new_constant.pm_account = 0
     new_constant.pm_passwd = ""
+    new_constant.support_chat_id = 0
     await new_constant.create()

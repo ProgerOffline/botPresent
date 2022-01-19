@@ -79,6 +79,7 @@ class Settings(db.Model):
     wallet_pm = Column(String)
     pm_account = Column(BigInteger)
     pm_passwd = Column(String)
+    support_chat_id = Column(BigInteger)
 
 
 class OutsRecords(db.Model):

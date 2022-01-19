@@ -161,6 +161,7 @@ document.getElementById("btn-settings").onclick = () => {
             <td>Кошелек PM</td>
             <td>PM Логин</td>
             <td>PM Пароль</td>
+            <td>ID чата тех. поддержки</td>
         </tr>
     `;
 
@@ -180,6 +181,7 @@ document.getElementById("btn-settings").onclick = () => {
                 <td><input value='${result.wallet_pm}'></input></td>
                 <td><input value='${result.pm_account}'></input></td>
                 <td><input value='${result.pm_passwd}'></input></td>
+                <td><input value='${result.support_chat_id}'></input></td>
             </tr>
         `;
 

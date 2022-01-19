@@ -2,7 +2,6 @@
 
 import keyboards
 
-from data.config import SUPPORT_CHANNEL_ID 
 from aiogram import types
 from statesgroup import InvestProduct, Payment, Support, Wallet, OutMoney
 from aiogram.dispatcher import FSMContext
@@ -164,14 +163,24 @@ def setup(dp, bot):
             reply_markup=keyboards.reply.exit_corres(),
         )
 
+        constants = await settings_api.get_constants()
         msg = f"💬 Новый вопрос от <code>{message.from_user.username}</code>\n" + \
             f"ℹ️ Тип вопроса: {corres.quest_type}\n\n" + \
             f"Полный вопрос: {corres.quest_full}"
-        msg = await bot.send_message(
-            chat_id=SUPPORT_CHANNEL_ID,
-            text=msg,
-            reply_markup=keyboards.inline.answer(corres.id),
-        )
+
+        try:
+            msg = await bot.send_message(
+                chat_id=constants.support_chat_id,
+                text=msg,
+                reply_markup=keyboards.inline.answer(corres.id),
+            )
+        except ChatNotFound:
+            await state.finish()
+            await message.answer(
+                text="⚠️ Ошибка: id чата тех поддержки не существует",
+                reply_markup=keyboards.reply.main_menu(),
+            )
+            return
 
         await support_api.set_msg_id(corres.id, msg.message_id)
         
@@ -203,8 +212,9 @@ def setup(dp, bot):
                 reply_markup=keyboards.reply.main_menu(),
             )
 
+            constants = await settings_api.get_constants()
             await bot.edit_message_text(
-                chat_id=SUPPORT_CHANNEL_ID,
+                chat_id=constants.support_chat_id,
                 message_id=corres.msg_id,
                 text="ℹ️ Вопрос завершен, или отменен",
             )
@@ -227,11 +237,11 @@ def setup(dp, bot):
     @dp.message_handler(state=OutMoney.set_amount)
     async def set_amount(message: types.Message, state: FSMContext):
         if message.text == "Назад":
+            await state.finish()
             await message.answer(
                 text="🗃 Выберите раздел.",
                 reply_markup=keyboards.reply.main_menu(),
             )
-            await state.finish()
             return
 
         user = await users_api.get_user(message.from_user.id)
@@ -252,7 +262,7 @@ def setup(dp, bot):
             await state.finish()
             return
         
-        if amount < 10:
+        if amount < 500:
             await message.answer(
                 text="⚠️ Ошибка: Минимальная сумма вывода 500 RUB."
             )
@@ -271,7 +281,7 @@ def setup(dp, bot):
         await message.answer(
             text="❗️ Проверьте данные ❗️\n" + \
                 f"Вывод на кошелек PM: {user.wallet}.\n" + \
-                f"Сумма вывода: {amount}.\n\n" + \
+                f"Сумма вывода: {amount} RUB.\n\n" + \
                 "Внимательно проверьте данные, " + \
                 "и если все верно подтверждайте вывод.",
             reply_markup=keyboards.reply.confirm_out(),

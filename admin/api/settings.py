@@ -17,6 +17,7 @@ async def get_constants():
         "wallet_pm" : constants.wallet_pm,
         "pm_account" : constants.pm_account,
         "pm_passwd" : constants.pm_passwd,
+        "support_chat_id" : constants.support_chat_id,
     }
 
     response = app.response_class(

@@ -10,5 +10,3 @@ BOT_TOKEN = env.str("BOT_TOKEN")
 DB_PASS = env.str("DB_PASS")
 DB_USER = env.str("DB_USER")
 DB_HOST = env.str("DB_HOST")
-
-SUPPORT_CHANNEL_ID = env.str("SUPPORT_CHANNEL_ID")

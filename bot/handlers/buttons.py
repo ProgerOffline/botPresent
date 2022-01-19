@@ -12,7 +12,7 @@ import keyboards
 
 
 def setup(dp):
-    @dp.message_handler(filters.Text(contains="Назад"))
+    @dp.message_handler(filters.Text(contains="Назад"), state="*")
     async def back(message: types.Message):
         await message.answer(
             text="🗃 Выберите раздел.",

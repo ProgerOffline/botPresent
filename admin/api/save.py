@@ -74,6 +74,7 @@ async def save_settings():
         "wallet_pm" : data[5],
         "pm_account" : int(data[6]),
         "pm_passwd" : data[7],
+        "support_chat_id" : int(data[8]),
     }
     # TODO: Возможно понадобиться, пока оставлю здесь
     # await settings_api.check_precent(constants)
