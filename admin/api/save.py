@@ -69,13 +69,15 @@ async def save_settings():
         "precent" : float(data[0]),
         "cber_bank" : int(data[1]),
         "tinkoff_bank" : int(data[2]),
-        "fio" : data[3],
-        "wallet_pm" : data[4],
-        "pm_account" : int(data[5]),
-        "pm_passwd" : data[6],
+        "fio_cber" : data[3],
+        "fio_tinkoff" : data[4],
+        "wallet_pm" : data[5],
+        "pm_account" : int(data[6]),
+        "pm_passwd" : data[7],
     }
-
-    await settings_api.check_precent(constants)
+    # TODO: Возможно понадобиться, пока оставлю здесь
+    # await settings_api.check_precent(constants)
+    
     await settings_api.update_constants(constants)
     
     response = app.response_class(

@@ -156,7 +156,8 @@ document.getElementById("btn-settings").onclick = () => {
             <td>Текущий процент</td>
             <td>Реквизиты Сбербанка</td>
             <td>Реквизиты Тинькофф</td>
-            <td>ФИО</td>
+            <td>ФИО Сбербанк</td>
+            <td>ФИО Тинькофф</td>
             <td>Кошелек PM</td>
             <td>PM Логин</td>
             <td>PM Пароль</td>
@@ -174,7 +175,8 @@ document.getElementById("btn-settings").onclick = () => {
                 <td><input value='${result.precent}'></input></td>
                 <td><input value='${result.cber_bank}'></input></td>
                 <td><input value='${result.tinkoff_bank}'></input></td>
-                <td><input value='${result.fio}'></input></td>
+                <td><input value='${result.fio_cber}'></input></td>
+                <td><input value='${result.fio_tinkoff}'></input></td>
                 <td><input value='${result.wallet_pm}'></input></td>
                 <td><input value='${result.pm_account}'></input></td>
                 <td><input value='${result.pm_passwd}'></input></td>

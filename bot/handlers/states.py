@@ -31,12 +31,16 @@ def setup(dp, bot):
 
         constants = await settings_api.get_constants()
         data = await state.get_data()
+
         site = "<a href='https://sber.ru/bank/'>Сбербанк</a>" \
             if data['bank'] == "Сбербанк" \
             else  "<a href='https://www.tinkoff.ru/'>Тинькофф</a>"
         card = constants.cber_bank \
             if "sber" in site \
             else constants.tinkoff_bank
+        fio = constants.fio_cber \
+            if "sber" in site \
+            else constants.fio_tinkoff
             
         msg = "📌 <b>ПОРЯДОК ДЕЙСТВИЙ ДЛЯ СОВЕРШЕНИЯ ОБМЕНА:</b>\n\n" + \
             f"1️⃣ Перейдите на сайт {site}" + \
@@ -44,7 +48,7 @@ def setup(dp, bot):
             f"2️⃣ Совершите платеж на сумму <b>{amount} RUB</b>, " + \
                 "с точностью до 1 копейки.\n" + \
             f"3️⃣ Номер карты для перевода  - <code>{card}</code>.\n" + \
-            f"4️⃣ Ф.И.О. получателя -  {constants.fio}\n" + \
+            f"4️⃣ Ф.И.О. получателя -  {fio}\n" + \
             "5️⃣ Комментарий к  переводу -  Мой телефон +79112223333.\n\n" + \
             "❗️ Правильно указывайте «комментарии к платежу / сообщение " + \
                 "получателю», а именно: <b>«Мой телефон +79112223333»</b>. " + \
@@ -69,14 +73,21 @@ def setup(dp, bot):
     
     @dp.message_handler(state=Wallet.set_wallet)
     async def set_wallet(message: types.Message, state: FSMContext):
+        if message.text == "Назад":
+            await state.finish()
+            await message.answer(
+                text="🗃 Выберите раздел.",
+                reply_markup=keyboards.reply.main_menu(),
+            )
+            return
+
         if message.text[0] != "U" and message.text[0] != "u":
+            await state.finish()
             msg = "⚠️ Ошибка: Недопустимый формат кошелька. " + \
                     "Проверьте правильность написания"
-
             await message.answer(
                 text=msg,
             )
-            await state.finish()
             return
         
         await users_api.set_wallet(
@@ -97,6 +108,7 @@ def setup(dp, bot):
                 text="🗃 Выберите раздел.",
                 reply_markup=keyboards.reply.main_menu(),
             )
+            await state.finish()
             return
 
         try:
@@ -214,6 +226,14 @@ def setup(dp, bot):
         
     @dp.message_handler(state=OutMoney.set_amount)
     async def set_amount(message: types.Message, state: FSMContext):
+        if message.text == "Назад":
+            await message.answer(
+                text="🗃 Выберите раздел.",
+                reply_markup=keyboards.reply.main_menu(),
+            )
+            await state.finish()
+            return
+
         user = await users_api.get_user(message.from_user.id)
         
         if ("U" not in user.wallet) or ("U" not in user.wallet):

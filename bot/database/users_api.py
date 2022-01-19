@@ -96,3 +96,15 @@ async def get_all() -> list:
 
     users = await User.query.gino.all()
     return users
+
+
+async def set_invest_time(user_id: int) -> None:
+    """
+        Устанавливает время покупки инвестиции на текущее
+        args:
+            user_id - id пользователя в телеграмме
+    """
+
+    hours = datetime.now().hour
+    user = await get_user(user_id)
+    await user.update(invest_time=hours).apply()

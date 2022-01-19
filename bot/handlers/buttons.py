@@ -109,6 +109,7 @@ def setup(dp):
         await Wallet.set_wallet.set()
         await message.answer(
             text=msg,
+            reply_markup=keyboards.reply.back_to_menu(),
         )
 
     @dp.message_handler(filters.Text(contains="Инвестиционный продукт"))
@@ -134,6 +135,7 @@ def setup(dp):
             amount = data['amount']
 
         user = await users_api.get_user(message.from_user.id)
+        await users_api.set_invest_time(user.user_id)
 
         ballance = user.ballance - amount
         await users_api.set_ballance(message.from_user.id, ballance)
@@ -220,6 +222,7 @@ def setup(dp):
         await OutMoney.set_amount.set()
         await message.answer(
             text="💵 Введите сумму в RUB",
+            reply_markup=keyboards.reply.back_to_menu(),
         )
     
     @dp.message_handler(

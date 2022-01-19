@@ -22,7 +22,7 @@ class User(db.Model):
     referer = Column(Integer)
     ref_level = Column(Integer)
     reg_date = Column(DateTime)
-    query: sql.Select
+    invest_time = Column(Integer)
 
 
 class Support(db.Model):
@@ -33,7 +33,6 @@ class Support(db.Model):
     quest_type = Column(String(length=50))
     quest_full = Column(String(length=500))
     msg_id = Column(BigInteger)
-    query: sql.Select
 
 
 class Referers(db.Model):
@@ -41,7 +40,6 @@ class Referers(db.Model):
     id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
     user_id = Column(BigInteger)
     referer_id = Column(BigInteger)
-    query: sql.Select
 
 
 class ReferalProgramLevels(db.Model):
@@ -49,7 +47,6 @@ class ReferalProgramLevels(db.Model):
     id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
     level = Column(Integer)
     precent = Column(Integer)
-    query: sql.Select
 
 
 class InvestProduct(db.Model):
@@ -76,7 +73,8 @@ class Settings(db.Model):
     precent = Column(Float)
     cber_bank = Column(BigInteger)
     tinkoff_bank = Column(BigInteger)
-    fio = Column(String)
+    fio_cber = Column(String)
+    fio_tinkoff = Column(String)
     wallet_pm = Column(String)
     pm_account = Column(BigInteger)
     pm_passwd = Column(String)
