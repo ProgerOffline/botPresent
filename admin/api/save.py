@@ -84,7 +84,6 @@ async def save_settings():
 
     if change_precent:
         try:
-            print("remove file")
             path = os.getcwd() + "/precentPicture"
             os.remove(path)
         except FileNotFoundError:
@@ -104,8 +103,17 @@ async def save_picture():
     picture = await request.files
     
     if str(picture) != "ImmutableMultiDict([])":
-        picture = picture['file']
-        await picture.save(secure_filename("precentPicture"))
+        flag = True
+        while flag:
+            picture = picture['file']
+            await picture.save(secure_filename("precentPicture"))
+
+            try:
+                path = os.getcwd() + "/precentPicture"
+                image = open(path)
+                flag = False
+            except:
+                pass
 
     response = app.response_class(
         response="",
