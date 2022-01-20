@@ -15,10 +15,14 @@ async def api_get_users():
             if user.permission \
             else "Закрыт"
 
+        username = user.username \
+            if user.username != None \
+            else "-" 
+
         data = {
             "id" : user.id,
             "user_id" : user.user_id,
-            "username" : user.username,
+            "username" : username,
             "phone" : user.phone,
             "ballance" : user.ballance,
             "buyed" : user.buyed,
