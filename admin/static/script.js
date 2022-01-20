@@ -22,6 +22,20 @@ function showSuccessMessage() {
     });
 }
 
+function getPicture() {
+    let fileInput = document.getElementById("upload-file");
+    
+    if (fileInput == null) {
+        return "Нет картинки";
+    } else {
+        let formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        return formData;
+    }
+
+}
+
 function getData() {
     let table = document.getElementById("table-data");
     let rows = table.querySelectorAll("tr.user");
@@ -57,6 +71,7 @@ saveButton.onclick = () => {
     let type = saveButton.getAttribute("current-table");
     let url = domen + "/api/save/" + type;
     let data = JSON.stringify(getData());
+    let picture = getPicture();
 
     $.ajax({
         type : "POST",
@@ -64,6 +79,15 @@ saveButton.onclick = () => {
         data : { 'new-data' : data },
         success : showSuccessMessage,
         error : showErrorMessage,
+    });
+
+    $.ajax({
+        url: domen + "/api/save/picture",
+        type: 'POST',
+        processData: false, // важно
+        contentType: false, // важно
+        dataType : 'json',
+        data: picture,
     });
 }
     
@@ -182,6 +206,12 @@ document.getElementById("btn-settings").onclick = () => {
                 <td><input value='${result.pm_account}'></input></td>
                 <td><input value='${result.pm_passwd}'></input></td>
                 <td><input value='${result.support_chat_id}'></input></td>
+            </tr>
+            <tr class='file-upload'>
+                <td>Прикрепить фото</td>
+            </tr>
+            <tr style='width: 300px'>
+                <td style='padding: 10px'><input id='upload-file' type='file'></input></td>
             </tr>
         `;
 

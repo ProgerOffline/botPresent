@@ -146,6 +146,12 @@ select {
     background: none;
 }
 
+.file-upload {
+    margin-top: 200px;
+    width: 300px;
+    background-color: gray;
+}
+
 /* CSS-переменные */
 :root {
     --toast-border-radius: 0.25rem;

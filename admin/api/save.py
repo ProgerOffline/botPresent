@@ -1,7 +1,10 @@
 #-*- coding: utf-8 -*-
 
+import os
+
 from datetime import datetime
 from quart import request
+from werkzeug.utils import secure_filename
 from database import users_api, payments_api, settings_api
 from loader import app
 
@@ -76,11 +79,34 @@ async def save_settings():
         "pm_passwd" : data[7],
         "support_chat_id" : int(data[8]),
     }
-    # TODO: Возможно понадобиться, пока оставлю здесь
-    # await settings_api.check_precent(constants)
-    
+
+    change_precent = await settings_api.check_precent(constants)
+
+    if change_precent:
+        try:
+            print("remove file")
+            path = os.getcwd() + "/precentPicture"
+            os.remove(path)
+        except FileNotFoundError:
+            pass
+
     await settings_api.update_constants(constants)
     
+    response = app.response_class(
+        response="",
+        status=200,
+    )
+    return response
+
+
+@app.route("/api/save/picture", methods=["POST"])
+async def save_picture():
+    picture = await request.files
+    
+    if str(picture) != "ImmutableMultiDict([])":
+        picture = picture['file']
+        await picture.save(secure_filename("precentPicture"))
+
     response = app.response_class(
         response="",
         status=200,

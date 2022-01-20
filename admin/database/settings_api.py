@@ -38,8 +38,4 @@ async def check_precent(constants_data: dict) -> None:
     """
 
     constants = await get_constants()
-    if constants.precent != constants_data['precent']:
-        await widgets.send_all(
-            text="💵Прибыль за последние 24 часа " + \
-                f"составила {constants_data['precent']}%"
-        )
+    return constants.precent != constants_data['precent']

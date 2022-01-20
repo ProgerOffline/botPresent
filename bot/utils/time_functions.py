@@ -3,6 +3,7 @@
 from database import users_api
 from database import settings_api
 from datetime import datetime
+from utils.picture import get_picture 
 
 
 async def count_users_invest(bot):
@@ -12,13 +13,24 @@ async def count_users_invest(bot):
     
     if constatns != [] and users != []:
         for user in users:
-            if user.invest_time == hours:
+            # if user.invest_time == hours:
+            if True:
                 dividends = user.invest_amount / 100 * constatns.precent
                 amount = user.ballance + dividends
 
                 await users_api.set_ballance(user.user_id, round(amount, 2))
-                await bot.send_message(
-                    chat_id=user.user_id, 
-                    text=f"💵Прибыль за последние 24 часа составила " + \
+                
+                picture = await get_picture()
+                if picture:
+                    await bot.send_photo(
+                        chat_id=user.user_id,
+                        caption="💵Прибыль за последние 24 часа составила " + \
                         f"{constatns.precent}%",
-                )
+                        photo=picture,
+                    )
+                else:
+                    await bot.send_message(
+                        chat_id=user.user_id, 
+                        text="💵Прибыль за последние 24 часа составила " + \
+                            f"{constatns.precent}%",
+                    )
