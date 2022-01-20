@@ -43,7 +43,7 @@ def setup(dp, bot):
             is_base = bool(await users_api.get_user(message.from_user.id))
 
             await message.answer(
-                text=" 👋 Добро пожаловать в чат бот компании OKO",
+                text="👋 Добро пожаловать в чат бот инвестиционной платформы eCrypto",
                 reply_markup=keyboards.reply.authorization(is_base),
             )
             
@@ -51,6 +51,6 @@ def setup(dp, bot):
             is_base = bool(await users_api.get_user(message.from_user.id))
 
             await message.answer(
-                text=" 👋 Добро пожаловать в чат бот компании OKO",
+                text="👋 Добро пожаловать в чат бот инвестиционной платформы eCrypto",
                 reply_markup=keyboards.reply.authorization(is_base),
             )

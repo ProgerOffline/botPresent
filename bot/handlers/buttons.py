@@ -13,7 +13,8 @@ import keyboards
 
 def setup(dp):
     @dp.message_handler(filters.Text(contains="Назад"), state="*")
-    async def back(message: types.Message):
+    async def back(message: types.Message, state: FSMContext):
+        await state.finish()
         await message.answer(
             text="🗃 Выберите раздел.",
             reply_markup=keyboards.reply.main_menu(),
@@ -60,20 +61,10 @@ def setup(dp):
             reply_markup=keyboards.reply.main_menu(),
         )
         await state.finish()
-    
-    @dp.message_handler(
-        filters.Text(contains="Назад"), state=Payment.payment_check)
-    async def back_to_menu(message: types.Message, state: FSMContext):
-        await state.finish()
-        await message.answer(
-            text="🗃 Выберите раздел.",
-            reply_markup=keyboards.reply.main_menu(),
-        )
 
     @dp.message_handler(filters.Text(contains="Реферальная ссылка"))
     async def ref_link(message: types.Message):
         user = await users_api.get_user(message.from_user.id)
-        print(user.buyed)
         if user.invest_amount > 0:
             msg = "🔗 Скопируйте и отправьте ссылку новому партнеру: " + \
                 f"https://t.me/tg4bot_bot?start=referer_{user.id}"

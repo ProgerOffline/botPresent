@@ -48,6 +48,7 @@ async def add_new_user(contact, referer=0) -> User:
     new_user.referer = referer
     new_user.ref_level = 3
     new_user.reg_date = datetime.now()
+    new_user.permission = True
 
     await new_user.create()
     return new_user

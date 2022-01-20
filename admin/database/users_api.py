@@ -116,3 +116,19 @@ async def update_user(user_data : dict) -> None:
         ballance=user_data['ballance'],
         invest_amount=user_data['invest_amount'],
     ).apply()
+
+
+async def check_user_block(status: str, user_id: int):
+    """
+        Проверяет статус пользователя на блокировку
+        args:
+            status - Текст который указан в таблице
+    """
+
+    user = await get_user_db_id(user_id)
+
+    if status in ("Открыт", "открыт"):
+        await user.update(permission=True).apply()
+
+    if status in ("Закрыт", "закрыт"):
+        await user.update(permission=False).apply()

@@ -96,11 +96,13 @@ document.getElementById("btn-clients").onclick = () => {
     let template = `
         <tr class="header">
             <td>ID</td>
+            <td>Никнейм</td>
             <td>Номер телефона</td>
             <td>Дата регистрации</td>
             <td>Кошелек PM</td>
             <td>Баланс</td>
             <td>Инвестиция</td>
+            <td>Доступ</td>
         </tr>
     `;
 
@@ -114,11 +116,19 @@ document.getElementById("btn-clients").onclick = () => {
             template += `
                 <tr class="user">
                     <td>${result[i].id}</td>
+                    <td><input value='${result[i].username}'></input></td>
                     <td><input value='${result[i].phone}'></input></td>
                     <td><input value='${result[i].reg_date}'></input></td>
                     <td><input value='${result[i].wallet}'></input></td>
                     <td><input value='${result[i].ballance}'></input></td>
                     <td><input value='${result[i].invest_amount}'></input></td>
+                    <td>
+                        <select>
+                            <option>${result[i].permission}</option>
+                            <option>Открыт</option>
+                            <option>Закрыт</option>
+                        </select>
+                    </td>
                 </tr>
             `;
         }

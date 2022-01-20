@@ -5,17 +5,16 @@ from loader import app
 from database import users_api, payments_api
 
 
-@app.route("/api")
-async def api_index():
-    pass
-
-
 @app.route("/api/getUsers", methods=['GET'])
 async def api_get_users():
     users = await users_api.get_all()
     result_list = []
 
     for user in users:
+        permission = "Открыт" \
+            if user.permission \
+            else "Закрыт"
+
         data = {
             "id" : user.id,
             "user_id" : user.user_id,
@@ -28,6 +27,7 @@ async def api_get_users():
             "referer" : user.referer,
             "ref_level" : user.ref_level,
             "reg_date" : user.reg_date.strftime("%d.%m.%y"),
+            "permission" : permission,
         }
         result_list.append(data)
 

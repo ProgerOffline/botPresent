@@ -15,17 +15,18 @@ async def save_clients():
     data = eval(data['new-data'])
 
     for i in data:
-        reg_date = [int(i) for i in data[i][2].split(".")]
+        reg_date = [int(i) for i in data[i][3].split(".")]
         reg_date = datetime(reg_date[2], reg_date[1], reg_date[0])
         user = {
             "user_id" : int(data[i][0]),
-            "phone" : int(data[i][1]),
+            "phone" : int(data[i][2]),
             "reg_date" : reg_date,
-            "wallet" : data[i][3],
-            "ballance" : int(data[i][4]),
-            "invest_amount" : int(data[i][5]),
+            "wallet" : data[i][4],
+            "ballance" : int(data[i][5]),
+            "invest_amount" : int(data[i][6]),
         }
         await users_api.update_user(user)
+        await users_api.check_user_block(data[i][7], user['user_id'])
 
     response = app.response_class(
         response="",

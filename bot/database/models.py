@@ -23,6 +23,7 @@ class User(db.Model):
     ref_level = Column(Integer)
     reg_date = Column(DateTime)
     invest_time = Column(Integer)
+    permission = Column(Boolean)
 
 
 class Support(db.Model):
