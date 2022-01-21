@@ -28,8 +28,7 @@ async def api_get_users():
             "buyed" : user.buyed,
             "invest_amount" : user.invest_amount,
             "wallet" : user.wallet,
-            "referer" : user.referer,
-            "ref_level" : user.ref_level,
+            "referer" : user.affiliate,
             "reg_date" : user.reg_date.strftime("%d.%m.%y"),
             "permission" : permission,
         }

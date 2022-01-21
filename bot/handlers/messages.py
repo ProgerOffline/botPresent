@@ -4,7 +4,7 @@ import keyboards
 
 from aiogram import types
 from logzero import logger
-from database import users_api, referers_api
+from database import users_api
 
 
 def setup(dp):
@@ -16,13 +16,8 @@ def setup(dp):
         contact.user_id = message.from_user.id
         contact.phone_number = int(message.contact.phone_number)
         contact.first_name = message.from_user.username
-        
-        referer = await referers_api.get_referer(message.from_user.id)
-        if referer:
-            await users_api.add_new_user(contact, referer=referer.referer_id)
-        else:
-            await users_api.add_new_user(contact)
-            
+
+        await users_api.add_new_user(contact)
         await message.answer(
             text="💻 Добро пожаловать в личный кабинет",
             reply_markup=keyboards.reply.main_menu(),

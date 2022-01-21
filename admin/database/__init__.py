@@ -4,7 +4,6 @@ from data.config import DB_HOST, DB_USER, DB_PASS
 from database.models import db
 
 from . import models
-from . import referers_api
 from . import support_api
 from . import users_api
 from . import outs_api

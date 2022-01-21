@@ -3,7 +3,7 @@
 import keyboards 
 from aiogram import types
 from statesgroup import Support
-from database import users_api, support_api, referers_api
+from database import users_api, support_api
 
 
 def setup(dp, bot):
@@ -34,13 +34,19 @@ def setup(dp, bot):
             )
         
         elif "referer" in args:
-            referer_id = int(args.split("_")[1])
-            await referers_api.create_record(
-                referer_id=referer_id, 
+            is_base = bool(await users_api.get_user(message.from_user.id))
+
+            affiliate_id = int(args.split("_")[1])
+            await users_api.create_record_user(
                 user_id=message.from_user.id,
+                affiliate_id=affiliate_id,
             )
 
-            is_base = bool(await users_api.get_user(message.from_user.id))
+            referer = await users_api.get_user(message.from_user.id)
+            affiliate = await users_api.get_user_db_id(affiliate_id)
+            
+            await users_api.set_affiliate(referer.user_id, affiliate.id)
+            await users_api.add_referal(affiliate.user_id, referer.id)
 
             await message.answer(
                 text="👋 Добро пожаловать в чат бот инвестиционной платформы eCrypto",
@@ -50,7 +56,18 @@ def setup(dp, bot):
         else:
             is_base = bool(await users_api.get_user(message.from_user.id))
 
+            if not is_base:
+                await users_api.create_record_user(
+                    user_id=message.from_user.id,
+                    affiliate_id=0,
+                )
+
             await message.answer(
                 text="👋 Добро пожаловать в чат бот инвестиционной платформы eCrypto",
                 reply_markup=keyboards.reply.authorization(is_base),
             )
+    
+    @dp.message_handler(commands=['show'])
+    async def add_check(message: types.Message):
+        user = await users_api.get_user(message.from_user.id)
+        await message.answer(user.referers)

@@ -92,10 +92,13 @@ def setup(dp):
 
     @dp.message_handler(filters.Text(contains="Кошелек для вывода"))
     async def wallet_out(message: types.Message):
-        msg = "💲 Введите ваш долларовый кошелек платежной системы " + \
-            "Perfect Money.\nПример кошелька: U1234567\n" + \
-            "📌 Как зарегистрировать кошелек Perfect Money" + \
-            " можете прочитать в данной статье htts://"
+        msg = \
+            "💲 Введите ваш долларовый кошелек платежной системы " + \
+            "Perfect Money.\n" + \
+            "Пример кошелька: U1234567\n" + \
+            "📌 Как зарегистрировать кошелек Perfect Money " + \
+            "можете прочитать в данной статье: " + \
+            "<a href='https://telegra.ph/Registraciya-scheta-v-Perfect-Money-01-20'>✅ Читать</a>"
 
         await Wallet.set_wallet.set()
         await message.answer(
@@ -128,11 +131,27 @@ def setup(dp):
         user = await users_api.get_user(message.from_user.id)
         await users_api.set_invest_time(user.user_id)
 
+        # Уменьшаем баланс на amount
         ballance = user.ballance - amount
         await users_api.set_ballance(message.from_user.id, ballance)
 
+        # Увеличиваем инвестиционный баланс на amount
         invest_amount = user.invest_amount + amount
         await users_api.set_invest_amount(message.from_user.id, invest_amount)
+        
+        # Присылаем реф. процент к аффилиалу от 1 уровня до 3
+        affiliate = await users_api.get_user_db_id(user.affiliate)
+        levels = [20, 10, 5]
+        for i in range(3):
+            try:
+                await users_api.set_ballance(
+                    user_id=affiliate.user_id, 
+                    amount=affiliate.ballance + (amount / 100 * levels[i]),
+                )
+            except AttributeError:
+                break
+
+            affiliate = await users_api.get_user_db_id(affiliate.affiliate)
 
         msg = "✅ Инвестиционный продукт успешно оплачен. " + \
                 "Каждые 24 часа вам будут начисляться дивиденды."
@@ -192,7 +211,7 @@ def setup(dp):
         user = await users_api.get_user(message.from_user.id)
 
         wallet = user.wallet if user.wallet != "" else "⚠️ Привяжите кошелек"
-        referer = user.referer if user.referer != 0 else "У вас нет пригласителя"
+        referer = user.affiliate if user.affiliate != 0 else "У вас нет пригласителя"
         month = user.reg_date.month
         month = month if month >= 10 else f"0{month}"
         day = user.reg_date.day

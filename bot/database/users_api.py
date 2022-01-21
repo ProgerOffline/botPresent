@@ -3,6 +3,7 @@
 from database.models import User
 from datetime import datetime
 
+
 async def get_user(user_id) -> User:
     """
         Получает пользователя из базы
@@ -23,35 +24,44 @@ async def get_user_db_id(user_id) -> User:
 
     user = await User.query.where(User.id == user_id).gino.first()
     return user
-    
 
-async def add_new_user(contact, referer=0) -> User: 
+
+async def create_record_user(user_id, affiliate_id) -> User:
+    """
+        Возвращает первичную запись о пользователе
+        args:
+            user_id - id пользователя в телеграмме
+            affiliate_id - id аффилиала в телеграмме
+    """
+    
+    record_user = User()
+    record_user.user_id = user_id
+    record_user.affiliate = affiliate_id
+    record_user.referers = []
+    record_user.permission = True
+    await record_user.create()
+
+    return record_user
+
+
+async def add_new_user(contact) -> User: 
     """
         Добавляет пользователя в базу если его в ней нет
         args:
             contact - types.Contact (контакт пользователя)
     """
 
-    old_user = await get_user(contact.user_id)
-    
-    if old_user:
-        return old_user
-    
-    new_user = User()
-    new_user.user_id = contact.user_id
-    new_user.phone = contact.phone_number
-    new_user.username = contact.first_name
-    new_user.ballance = 0.0
-    new_user.buyed = False
-    new_user.invest_amount = 0
-    new_user.wallet = "Не указан"
-    new_user.referer = referer
-    new_user.ref_level = 3
-    new_user.reg_date = datetime.now()
-    new_user.permission = True
+    user = await get_user(contact.user_id)
+    await user.update(
+        phone=contact.phone_number,
+        username=contact.first_name,
+        ballance=0.0,
+        invest_amount=0,
+        wallet="Не указан",
+        reg_date=datetime.now(),
+    ).apply()
 
-    await new_user.create()
-    return new_user
+    return user
 
 
 async def set_ballance(user_id, amount) -> None:
@@ -109,3 +119,32 @@ async def set_invest_time(user_id: int) -> None:
     hours = datetime.now().hour
     user = await get_user(user_id)
     await user.update(invest_time=hours).apply()
+
+
+async def set_affiliate(referal_id, affiliate_id) -> None:
+    """
+        Устанавливает аффилиал для реферала
+        args:
+            referal_id - id реферала в телеграмме
+            affiliate_id - id аффилиала в телеграмме
+    """
+
+    referal = await get_user(referal_id)
+    await referal.update(affiliate=affiliate_id).apply()
+
+
+async def add_referal(affiliate_id, referal_id) -> None:
+    """
+        Добавляет реферала в список рефералов аффилиала
+        args:
+            affiliate_id - id аффилиала в телеграмме
+            referal_id - id реферала в базе данных
+    """
+
+    affiliate = await get_user(affiliate_id)
+    _list = affiliate.referers
+    _list.append(referal_id)
+
+    await affiliate.update(
+        referers=_list,
+    ).apply()

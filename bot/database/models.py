@@ -3,7 +3,7 @@
 from gino import Gino
 from sqlalchemy import sql
 from sqlalchemy import (Column, Integer, BigInteger, String,
-                       Sequence, Boolean, Float, DateTime)
+                       Sequence, Boolean, Float, DateTime, PickleType)
 
 
 db = Gino()
@@ -19,8 +19,8 @@ class User(db.Model):
     buyed = Column(Boolean)
     invest_amount = Column(Float)
     wallet = Column(String)
-    referer = Column(Integer)
-    ref_level = Column(Integer)
+    affiliate = Column(Integer)
+    referers = Column(PickleType)
     reg_date = Column(DateTime)
     invest_time = Column(Integer)
     permission = Column(Boolean)
@@ -34,20 +34,6 @@ class Support(db.Model):
     quest_type = Column(String(length=50))
     quest_full = Column(String(length=500))
     msg_id = Column(BigInteger)
-
-
-class Referers(db.Model):
-    __tablename__ = "referers"
-    id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
-    user_id = Column(BigInteger)
-    referer_id = Column(BigInteger)
-
-
-class ReferalProgramLevels(db.Model):
-    __tablename__ = "referalprogramlevels"
-    id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
-    level = Column(Integer)
-    precent = Column(Integer)
 
 
 class InvestProduct(db.Model):
