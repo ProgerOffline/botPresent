@@ -96,7 +96,7 @@ async def get_all() -> list:
         Возвращает список всех зарегистрированных пользователей
     """
 
-    users = await User.query.gino.all()
+    users = await User.query.where(User.reg_date != None).gino.all()
     
     return users
 
