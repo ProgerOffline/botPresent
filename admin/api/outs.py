@@ -13,7 +13,8 @@ async def get_outs():
     for record in outs_records:
         record.error = "Нет ошибок" if record.error == None else record.error 
         data = {
-            "id" : record.user_db_id,
+            "id" : record.id,
+            "user_db_id" : record.user_db_id,
             "phone" : record.phone,
             "date" : record.date.strftime("%d.%m.%y %H:%M"),
             "wallet" : record.wallet,

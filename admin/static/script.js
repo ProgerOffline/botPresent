@@ -42,6 +42,8 @@ function getData() {
     let data = {};
     
     for (let i = 0; i < rows.length; i++){
+        let paymentID = rows[i].getAttribute("payment-id");
+        let outID = rows[i].getAttribute("out-id");
         let elements = rows[i].querySelectorAll("td");
         let list = [];
 
@@ -61,6 +63,14 @@ function getData() {
             }
         }
 
+        if (outID) {
+            list.push(outID);
+        }
+
+        if (paymentID) {
+            list.push(paymentID);
+        }
+        
         data[i] = list;
     }
 
@@ -112,6 +122,7 @@ document.getElementById("btn-clients").onclick = () => {
     connect.send();
     connect.onload = () => {
         result = connect.response;
+        console.log(result);
         for(let i = 0; i < result.length; i++){
             template += `
                 <tr class="user">
@@ -160,8 +171,8 @@ document.getElementById("btn-payments").onclick = () => {
         result = connect.response;
         for(let i = 0; i < result.length; i++){
             template += `
-                <tr class="user">
-                    <td>${result[i].id}</td>
+                <tr class="user" payment-id='${result[i].id}'>
+                    <td>${result[i].user_db_id}</td>
                     <td><input value='${result[i].phone}'></input></td>
                     <td><input value='${result[i].date}'></input></td>
                     <td><input value='${result[i].bank}'></input></td>
@@ -253,8 +264,8 @@ document.getElementById("btn-out").onclick = () => {
         console.log(result);
         for(let i = 0; i < result.length; i++){
             template += `
-                <tr class="user">
-                    <td>${result[i].id}</td>
+                <tr class="user" out-id="${result[i].id}">
+                    <td>${result[i].user_db_id}</td>
                     <td>${result[i].phone}</td>
                     <td>${result[i].date}</td>
                     <td>${result[i].wallet}</td>

@@ -47,13 +47,15 @@ async def save_payments():
         date = datetime(date[2], date[1], date[0], hour=time[0], minute=time[1])
 
         payment = {
-            "id" : int(data[i][0]),
+            "user_db_id" : int(data[i][0]),
             "phone" : int(data[i][1]),
             "date" : date,
             "bank" : data[i][3],
             "amount" : int(data[i][4]),
             "status" : data[i][5],
+            "id" : int(data[i][6]),
         }
+
         await payments_api.update_payment(payment)
         await payments_api.check_payment(payment['id'])
 

@@ -13,6 +13,7 @@ async def api_get_payments():
     for payment in payments:
         data = {
             "id" : payment.id,
+            "user_db_id" : payment.user_db_id,
             "phone" : payment.phone,
             "date" : payment.date.strftime("%d.%m.%y %H:%M"),
             "bank" : payment.bank,
