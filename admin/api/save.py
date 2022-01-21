@@ -41,6 +41,10 @@ async def save_payments():
     data = eval(data['new-data'])
 
     for i in data:
+        phone = int(data[i][1]) \
+            if data[i][1] != "null" \
+            else 0
+
         date = data[i][2].split(" ")
         time = [int(i) for i in date[1].split(":")]
         date = [int(i) for i in date[0].split(".")]
@@ -48,7 +52,7 @@ async def save_payments():
 
         payment = {
             "user_db_id" : int(data[i][0]),
-            "phone" : int(data[i][1]),
+            "phone" : phone,
             "date" : date,
             "bank" : data[i][3],
             "amount" : int(data[i][4]),

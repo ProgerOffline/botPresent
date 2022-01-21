@@ -16,3 +16,14 @@ class UpdateLoggerMiddleware(BaseMiddleware):
             if not user.permission:
                 print(f"User is blocked: {update.message.from_user.id}")
                 raise CancelHandler()
+            
+        elif update.message.text == '/start':
+            pass
+        
+        elif user == None:
+            await update.message.answer(
+                text="⚠️ Ошибка: Что-то пошло не так, попробуйте нажать /start",
+                reply_markup=types.ReplyKeyboardRemove(),
+            )
+
+            raise CancelHandler()

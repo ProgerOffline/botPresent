@@ -70,8 +70,9 @@ function getData() {
         if (paymentID) {
             list.push(paymentID);
         }
-        
+
         data[i] = list;
+        console.log(list);
     }
 
     return data;
