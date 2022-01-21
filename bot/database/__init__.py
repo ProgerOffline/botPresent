@@ -6,8 +6,8 @@ from database.models import db, InvestProduct, Settings
 
 async def create_db():
     await db.set_bind(f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/gino")
-    await db.gino.drop_all()
-    await db.gino.create_all()
+    # await db.gino.drop_all()
+    # await db.gino.create_all()
 
     await fill_constants_data()
     await fill_invest_product_data()

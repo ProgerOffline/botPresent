@@ -52,14 +52,15 @@ async def add_new_user(contact) -> User:
     """
 
     user = await get_user(contact.user_id)
-    await user.update(
-        phone=contact.phone_number,
-        username=contact.first_name,
-        ballance=0.0,
-        invest_amount=0,
-        wallet="Не указан",
-        reg_date=datetime.now(),
-    ).apply()
+    if not user.phone:
+        await user.update(
+            phone=contact.phone_number,
+            username=contact.first_name,
+            ballance=0.0,
+            invest_amount=0,
+            wallet="Не указан",
+            reg_date=datetime.now(),
+        ).apply()
 
     return user
 

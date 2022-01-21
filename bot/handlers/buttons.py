@@ -7,6 +7,7 @@ from aiogram.dispatcher import FSMContext
 from statesgroup import Payment, Support, Wallet, InvestProduct, OutMoney
 from utils.perfectmoney import PerfectMoney
 from pycbrf import ExchangeRates
+from bot import bot
 
 import keyboards
 
@@ -147,6 +148,11 @@ def setup(dp):
                 await users_api.set_ballance(
                     user_id=affiliate.user_id, 
                     amount=affiliate.ballance + (amount / 100 * levels[i]),
+                )
+                await bot.send_message(
+                    chat_id=affiliate.user_id,
+                    text="ℹ️ На ваш баланс начислено реферальное " + \
+                    f"вознаграждение в размере {amount / 100 * levels[i]} RUB."
                 )
             except AttributeError:
                 break
