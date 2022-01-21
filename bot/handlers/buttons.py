@@ -44,6 +44,7 @@ def setup(dp):
         await state.update_data(bank=message.text)
         await message.answer(
             text="💵 Введите сумму в RUB",
+            reply_markup=keyboards.reply.back_to_menu(),
         )
 
     @dp.message_handler(
