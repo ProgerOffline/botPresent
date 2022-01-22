@@ -132,3 +132,14 @@ async def check_user_block(status: str, user_id: int):
 
     if status in ("Закрыт", "закрыт"):
         await user.update(permission=False).apply()
+
+
+async def delete_user(user_db_id : int):
+    """
+        Удаляет запись о пользователе из базы данных
+        args:
+            user_db_id - id пользователя из базы
+    """
+
+    user = await get_user_db_id(user_db_id)
+    await user.delete()

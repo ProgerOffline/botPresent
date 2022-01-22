@@ -152,6 +152,16 @@ select {
     background-color: gray;
 }
 
+.delete {
+    background-color: rgb(165, 0, 0);
+    transition: .1s;
+    cursor: pointer;
+}
+
+.delete:hover {
+    background-color: rgb(214, 0, 0);
+}
+
 /* CSS-переменные */
 :root {
     --toast-border-radius: 0.25rem;

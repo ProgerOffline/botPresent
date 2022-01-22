@@ -2,6 +2,7 @@
 
 from quart import json
 from loader import app
+from quart import request
 from database import payments_api
 
 
@@ -28,4 +29,19 @@ async def api_get_payments():
         mimetype='application/json',
     ) 
     
+    return response
+
+
+@app.route("/api/delete/payment", methods=["POST"])
+async def delet_payment():
+    data = await request.form
+    _id = int(data['id'])
+
+    await payments_api.delete_payment(_id)
+
+    response = app.response_class(
+        response="",
+        status=200,
+    ) 
+
     return response

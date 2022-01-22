@@ -124,3 +124,14 @@ async def check_payment(payment_id : int) -> None:
                 "Администратором.",
         )
         await set_status(payment_id, "Отменен")
+
+
+async def delete_payment(payment_id):
+    """
+        Удаляет запись о пополнении из базы данных
+        args:
+            payment_id - id записи о пополнении в базе данных,
+    """
+
+    payment = await get_payment(payment_id)
+    await payment.delete()

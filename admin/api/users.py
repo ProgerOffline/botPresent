@@ -2,6 +2,7 @@
 
 from quart import json
 from loader import app
+from quart import request
 from database import users_api, payments_api
 
 
@@ -38,6 +39,21 @@ async def api_get_users():
         response=json.dumps(result_list),
         status=200,
         mimetype='application/json',
+    ) 
+
+    return response
+
+
+@app.route("/api/delete/client", methods=["POST"])
+async def delete_client():
+    data = await request.form
+    _id = int(data['id'])
+
+    await users_api.delete_user(_id)
+
+    response = app.response_class(
+        response="",
+        status=200,
     ) 
 
     return response

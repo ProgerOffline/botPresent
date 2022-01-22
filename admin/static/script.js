@@ -72,7 +72,6 @@ function getData() {
         }
 
         data[i] = list;
-        console.log(list);
     }
 
     return data;
@@ -101,8 +100,8 @@ saveButton.onclick = () => {
         data: picture,
     });
 }
-    
-document.getElementById("btn-clients").onclick = () => {
+
+function showClients() {
     let url = domen + "/api/getUsers";
     let template = `
         <tr class="header">
@@ -114,6 +113,7 @@ document.getElementById("btn-clients").onclick = () => {
             <td>Баланс</td>
             <td>Инвестиция</td>
             <td>Доступ</td>
+            <td></td>
         </tr>
     `;
 
@@ -123,7 +123,7 @@ document.getElementById("btn-clients").onclick = () => {
     connect.send();
     connect.onload = () => {
         result = connect.response;
-        console.log(result);
+
         for(let i = 0; i < result.length; i++){
             template += `
                 <tr class="user">
@@ -141,6 +141,7 @@ document.getElementById("btn-clients").onclick = () => {
                             <option>Закрыт</option>
                         </select>
                     </td>
+                    <td class="delete" onclick="deleteRecord(this)">Удалить</td>
                 </tr>
             `;
         }
@@ -151,7 +152,7 @@ document.getElementById("btn-clients").onclick = () => {
     }
 }
 
-document.getElementById("btn-payments").onclick = () => {
+function showPayements() {
     let url = domen + "/api/getPayments";
     let template = `
         <tr class="header">
@@ -161,6 +162,7 @@ document.getElementById("btn-payments").onclick = () => {
             <td>Банк</td>
             <td>Сумма, руб</td>
             <td>Статус</td>
+            <td></td>
         </tr>
     `;
 
@@ -185,6 +187,7 @@ document.getElementById("btn-payments").onclick = () => {
                             <option>Отменить</option>
                         </select>
                     </td>
+                    <td class="delete" onclick="deleteRecord(this)">Удалить</td>
                 </tr>
             `;
         }
@@ -193,6 +196,40 @@ document.getElementById("btn-payments").onclick = () => {
         document.getElementById("header").innerHTML = "Пополнения";
         document.getElementById("table-data").innerHTML = template;
     }
+}
+
+function deleteRecord(element) {
+    let parent = element.parentNode;
+    let id;
+    let type;
+    let reloadData;
+
+    if (parent.getAttribute("payment-id")) {
+        id = parent.getAttribute("payment-id");
+        type = "payment";
+        reloadData = showPayements;
+        
+    } else {
+        id = parent.children[0].textContent;
+        type = "client";
+        reloadData = showClients;
+    }
+
+    $.ajax({
+        url : domen + "/api/delete/" + type,
+        type: "POST",
+        data: {"id" : id},
+        success : reloadData,
+        error : showErrorMessage,
+    })
+}
+    
+document.getElementById("btn-clients").onclick = () => {
+    showClients();
+}
+
+document.getElementById("btn-payments").onclick = () => {
+    showPayements();
 }
 
 document.getElementById("btn-settings").onclick = () => {
@@ -262,7 +299,7 @@ document.getElementById("btn-out").onclick = () => {
     connect.send();
     connect.onload = () => { 
         result = connect.response;
-        console.log(result);
+
         for(let i = 0; i < result.length; i++){
             template += `
                 <tr class="user" out-id="${result[i].id}">
