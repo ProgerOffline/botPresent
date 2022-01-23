@@ -8,3 +8,4 @@ pycbrf
 apscheduler
 postgres
 quart
+werkzeug
