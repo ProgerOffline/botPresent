@@ -57,7 +57,7 @@ async def save_payments():
             "bank" : data[i][3],
             "amount" : int(data[i][4]),
             "status" : data[i][5],
-            "id" : int(data[i][6]),
+            "id" : int(data[i][7]),
         }
 
         await payments_api.update_payment(payment)
