@@ -14,7 +14,7 @@ async def count_users_invest(bot):
     if constatns != [] and users != []:
         for user in users:
             # if user.invest_time == hours:
-            if True:
+            if user.invest_amount > 0:
                 dividends = user.invest_amount / 100 * constatns.precent
                 amount = user.ballance + dividends
 

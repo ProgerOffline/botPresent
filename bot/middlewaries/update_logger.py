@@ -17,7 +17,7 @@ class UpdateLoggerMiddleware(BaseMiddleware):
                 print(f"User is blocked: {update.message.from_user.id}")
                 raise CancelHandler()
             
-        elif update.message.text == '/start':
+        elif '/start' in update.message.text:
             pass
         
         elif user == None:

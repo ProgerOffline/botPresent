@@ -193,7 +193,7 @@ def setup(dp, bot):
 
         corres = await support_api.get_corres(corres_id)
 
-        if message.text == "Завершить чат":
+        if message.text == "Завершить чат" or message.text == "Назад":
             if message.from_user.id == corres.user_id:
                 companion_id = corres.support_id
             else:
@@ -261,14 +261,12 @@ def setup(dp, bot):
             await message.answer(
                 text="⚠️ Ошибка: сумма должна состоять только из цифр",
             )
-            await state.finish()
             return
         
         if amount < 500:
             await message.answer(
                 text="⚠️ Ошибка: Минимальная сумма вывода 500 RUB."
             )
-            await state.finish()
             return
         
         if user.ballance < amount:

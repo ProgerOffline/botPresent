@@ -1,4 +1,4 @@
-let domen = "http://127.0.0.1:5000";
+let domen = "http://62.109.24.170:5000";
 let header = document.querySelector("header");
 let saveButton = document.getElementById("btn-save");
 

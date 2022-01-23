@@ -25,7 +25,7 @@ async def on_startup(dp):
     await create_db()
 
     scheduler.start()
-    scheduler.add_job(count_users_invest, "interval", hours=1, args=(bot, ))
+    scheduler.add_job(count_users_invest, "interval", minutes=5, args=(bot, ))
     dp.middleware.setup(UpdateLoggerMiddleware())
     handlers.setup(dp, bot)
 
