@@ -9,7 +9,7 @@ from utils.picture import get_picture
 async def count_users_invest(bot):
     constatns = await settings_api.get_constants()
     users = await users_api.get_all()
-    hours = datetime.now().hour
+    hours = datetime.now().minute
     
     if constatns != [] and users != []:
         for user in users:

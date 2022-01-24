@@ -117,7 +117,7 @@ async def set_invest_time(user_id: int) -> None:
             user_id - id пользователя в телеграмме
     """
 
-    hours = datetime.now().hour
+    hours = datetime.now().minute
     user = await get_user(user_id)
     await user.update(invest_time=hours).apply()
 
