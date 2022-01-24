@@ -69,7 +69,7 @@ def setup(dp):
         user = await users_api.get_user(message.from_user.id)
         if user.invest_amount > 0:
             msg = "🔗 Скопируйте и отправьте ссылку новому партнеру: " + \
-                f"https://t.me/crypto_e_bot?start=referer_{user.id}"
+                f"https://t.me/tg4bot_bot?start=referer_{user.id}"
         else:
             msg = "⚠️ Для получения возможность получать доход от рефералов " + \
                 "Вам необходимо приобрести инвестиционный продукт."
@@ -189,7 +189,7 @@ def setup(dp):
     @dp.message_handler(filters.Text(contains="Презентация"))
     async def presentation(message: types.Message):
         await message.answer_document(
-            document="BQACAgIAAxkBAAOVYe3S6N3f6AunEtp8-F8DtAn1HhsAAjAUAAIUB3FL5oFd5Ch9UjMjBA",
+            document="BQACAgIAAxkBAAIRvWHoeQ6Hc4NbEZplrd9ulc1lDEcHAAKZEAACYk9JS2XrKXgg8S8lIwQ",
             caption="📌 Скачать презентацию eCrypto в PDF",
         )
     
