@@ -144,6 +144,13 @@ def setup(dp, bot):
 
     @dp.message_handler(state=Support.quest_full)
     async def quest_full(message: types.Message, state: FSMContext):
+        if message.text == "Назад":
+            await state.finish()
+            await message.answer(
+                text="🗃 Выберите раздел.",
+                reply_markup=keyboards.reply.main_menu(),
+            )
+
         async with state.proxy() as data:
             quest_type = data['quest_type']
         
