@@ -14,3 +14,12 @@ def answer(corres_id):
             url=f"https://t.me/crypto_e_bot?start=answer_{corres_id}",
         ),
     ) 
+
+
+def presentation():
+    return types.InlineKeyboardMarkup().add(
+        types.InlineKeyboardButton(
+            text="Презентация",
+            url="https://ecrypto.finance/presentation.html",
+        )
+    )

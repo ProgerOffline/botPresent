@@ -188,9 +188,9 @@ def setup(dp):
     
     @dp.message_handler(filters.Text(contains="Презентация"))
     async def presentation(message: types.Message):
-        await message.answer_document(
-            document="BQACAgIAAxkBAAIF1mHuY6KZRpMnZqyu-vGK2lDqHJi8AAIwFAACFAdxS-aBXeQofVIzIwQ",
-            caption="📌 Скачать презентацию eCrypto в PDF",
+        await message.answer(
+            caption="🔗Ссылка на презентацию",
+            reply_markup=keyboards.inline.presentation(),
         )
     
     @dp.message_handler(filters.Text(contains="Техническая поддержка"))
