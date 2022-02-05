@@ -189,7 +189,7 @@ def setup(dp):
     @dp.message_handler(filters.Text(contains="Презентация"))
     async def presentation(message: types.Message):
         await message.answer(
-            caption="🔗Ссылка на презентацию",
+            text="🔗Ссылка на презентацию",
             reply_markup=keyboards.inline.presentation(),
         )
     
